@@ -11,16 +11,14 @@
 **Email**: christopher.smith@csueastbay.edu  
 **Phone**: (510) 885-4300 (CS Department)
 
-#
 ## Problem
 Create a communication network
-#
+
 ## Background information
 For physical office buildings in different places with fast internet connections with several 1,000 users.
-#
+
 ## Environment and system models
- 
-#
+
 ## Requirements
 > **Note:** I feel we should separate Functional and Non-functional Requirements  
 
