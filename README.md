@@ -11,6 +11,13 @@
 **Email**: christopher.smith@csueastbay.edu  
 **Phone**: (510) 885-4300 (CS Department)
 
+#
+
+[**Software Requirements Specification**
+](Documents/SRS.md)
+
+
+<!-- 
 ## Problem
 Create a communication network
 
@@ -36,4 +43,4 @@ For physical office buildings in different places with fast internet connections
 #### Optional
 * Group chats are the same as Direct Messages but have more than 2 people
 * Profile picture
-* Receive/Read receipts
+* Receive/Read receipts -->
