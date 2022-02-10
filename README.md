@@ -1,6 +1,6 @@
 # Communications System - Group 1
 
-**Group Members**: [Harrison Fisher](https://github.com/HarrisonFisher), [Nicholas Khine](https://github.com/nickkhine),  Brian Le, [Daniel Ochoa Morales](https://github.com/Dofmor), [Jacob Le Nguyen](https://github.com/jacoble2001)
+**Group Members**: [Harrison Fisher](https://github.com/HarrisonFisher), [Nicholas Khine](https://github.com/nickkhine),  [Brian Le](https://github.com/blk-29), [Daniel Ochoa Morales](https://github.com/Dofmor), [Jacob Le Nguyen](https://github.com/jacoble2001)
 #
 
 
