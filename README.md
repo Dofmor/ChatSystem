@@ -13,8 +13,12 @@
 
 #
 
-[**Software Requirements Specification**
-](Documents/SRS.md)
+[**Software Requirements Specification**](Documents/SRS.docx.pdf)
+
+[**Use Case Specification**](Documents/Use_Case_Specification.docx.pdf)
+
+[**Team Meetings**](Documents/TeamMeetings.pdf)
+
 
 
 <!-- 
