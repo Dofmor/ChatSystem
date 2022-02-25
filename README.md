@@ -11,7 +11,7 @@
 **Email**: christopher.smith@csueastbay.edu  
 **Phone**: (510) 885-4300 (CS Department)
 
-#
+## Documents
 
 [**Software Requirements Specification**](Documents/SRS.docx.pdf)
 
@@ -19,6 +19,7 @@
 
 [**Team Meetings**](Documents/TeamMeetings.pdf)
 
+[**ProjectSchedule.pdf**](Documents/ProjectSchedule.pdf)
 
 
 <!-- 
