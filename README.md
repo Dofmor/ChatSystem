@@ -6,9 +6,7 @@
 
 **Class**: CS 401–01 Software Engineering  
 **Semester**: Spring 2022  
-
 **Instructor**: Christopher Smith  
-**Phone**: (510) 885-4300 (CS Department)
 
 ## Documents
 
