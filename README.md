@@ -8,7 +8,6 @@
 **Semester**: Spring 2022  
 
 **Instructor**: Christopher Smith  
-**Email**: christopher.smith@csueastbay.edu  
 **Phone**: (510) 885-4300 (CS Department)
 
 ## Documents
