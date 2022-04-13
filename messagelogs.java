@@ -1,42 +1,74 @@
-public class messagelogs {
+public class Log {
 	private Message m;
-	private String[] GetConversationData() {
-		return null;
-	} 		//get the user conversation from the server
-	private String[] GetUserData() {
-		return null;
-	}  		//	get the data for the conversation
-
+	/** this is to call from message /
+	 * 
+	 * @return
+	 */
 	
-	public messagelogs(Message m) {
+	
+	
+	private String[] GetConversationData() {
+		m.getData();
+		return null;
+		/**
+		 * get the user conversation from the server/
+		 */
+	} 		
+	
+	
+
+	private String[] GetUserData() {
+		m.getData();
+		return null;
+		/**get the data for the conversation
+		 * 
+		 */
+		
+	}  		
+	
+	public Log(Message m) {
 		this.m = m;
 	}
 
 
-	public Message getM() {
-		return m;
-	}
 
 
-	public void setM(Message m) {
-		this.m = m;
-	}
-//this is to log message
+/**this is to log message
+ 
+ */
 	public void LogMessage() {
 		if(m.getDate().isEmpty()) {
+			while(m.getDate().contains(null)) {
+				System.out.println(m.getToServer());
+				
+			}
+			
 			
 		}
-			// message will be organized by date of publish
+			/** 
+			 * null is a place holder for message array
+			 * message will be organized by date of publish
+			 *  and if if message date list is empty then the array do nothing
+			 *  then if message date is full then 
+			 *  it go in a tranversal loop to reveal all the message said in that date
+			 *
+			 */
 			
 		}
 		
 		
 		
+	
+	
+	
+	public void sendLogs() {
+		/**
+		 *  this is to send message logs to the server
+		 */
 	}
 	
-	// this is to send logs of message to the client
-	public void sendLogs() {
+	
+
+	
 
 	}
-	
-	
