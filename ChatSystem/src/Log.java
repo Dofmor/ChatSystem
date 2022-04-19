@@ -1,3 +1,7 @@
+
+import Shared.*;
+
+
 public class Log {
 	private Message m;
 	/** this is to call from message /
@@ -12,7 +16,7 @@ public class Log {
 
 
 
-public Log(Message m, String[] conversationData, String[] userData) {
+	public Log(Message m, String[] conversationData, String[] userData) {
 		this.m = m;
 		ConversationData = conversationData;
 		UserData = userData;
@@ -23,9 +27,9 @@ public Log(Message m, String[] conversationData, String[] userData) {
 
 
 
-/**this is to log message
- 
- */
+	/*
+	 * *this is to log message
+	 */
 	public void LogMessage() {
 		if(m.getDate().isEmpty()) {
 			
