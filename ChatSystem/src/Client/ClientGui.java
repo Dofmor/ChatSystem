@@ -10,8 +10,8 @@ import java.awt.event.ActionListener;
 
 public class ClientGui implements ClientUserInterface {
 	
-	public Boolean Login() {
-		
+	public Boolean Login(String Username, String Password) {
+
 		return false;
 	}
 	
@@ -28,7 +28,7 @@ public class ClientGui implements ClientUserInterface {
 			Object[] Message = {"Username:", Username,"Password:", Password};
 			int optionChoosen = JOptionPane.showConfirmDialog(null, Message, "Login", JOptionPane.OK_CANCEL_OPTION);
 			if (optionChoosen == JOptionPane.OK_OPTION) {
-				if (Login() == true) {
+				if (Login(Username.getText(), Password.getText()) == true) {
 					break;
 				}else {
 					
