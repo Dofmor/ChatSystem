@@ -27,7 +27,7 @@ public Log(Message m, String[] conversationData, String[] userData) {
  
  */
 	public void LogMessage() {
-		if(m.getDate().isEmpty()) {
+		if(!m.getDate().isEmpty()) {
 			
 			while(m.getDate().contains(m.getFromClient())) {
 				System.out.println(m.getToServer());
