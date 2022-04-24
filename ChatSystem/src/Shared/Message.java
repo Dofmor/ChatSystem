@@ -5,10 +5,15 @@ package Shared;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Message {
+public class Message implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String type;
 	private String data;
 	private String status;
