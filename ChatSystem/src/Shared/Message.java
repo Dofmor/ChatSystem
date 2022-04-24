@@ -11,6 +11,7 @@ public class Message {
 
 	private String type;
 	private String data;
+	private String status;
 	private LocalDateTime dateTime;
 	private String fromClient;
 	private String toClient;
@@ -41,6 +42,13 @@ public class Message {
 		dateTime = LocalDateTime.now(timeZone);
 	}
 	
+	/**
+	 * Mutator method for the status variable.
+	 * @param stat - new status to be assigned
+	 */
+	public void setStatus(String stat) {
+		status = stat;
+	}
 	/**
 	 * Getter method that returns the type of message 
 	 * @return the type class attribute
