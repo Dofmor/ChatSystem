@@ -1,8 +1,8 @@
 import Server.*;
-import Shared.*;
 
 public class ServerDriver {
 	public static void main(String[] args) {
-		System.out.println("Hello World");
+		Server server = new Server(7777);
+		server.run();
 	}
 }

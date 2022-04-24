@@ -14,7 +14,7 @@ public class ClientDriver {
 	public static void main(String[] args) {
 
 		// creating client socket
-		int port = 7778;
+		int port = 7777;
 		InetAddress serverIP;
 		Socket socket;
 		try {
