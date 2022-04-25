@@ -21,28 +21,31 @@ public class ClientGui implements ClientUserInterface {
 		// TODO Auto-generated method stub
 		
 		
-		while (true) {
-						
-			JTextField Username = new JTextField();
-			JTextField Password = new JPasswordField();
-			Object[] Message = {"Username:", Username,"Password:", Password};
-			int optionChoosen = JOptionPane.showConfirmDialog(null, Message, "Login", JOptionPane.OK_CANCEL_OPTION);
-			if (optionChoosen == JOptionPane.OK_OPTION) {
-				if (Login(Username.getText(), Password.getText()) == true) {
-					break;
-				}else {
-					
-					JFrame jFrame = new JFrame();
-			        String msg  = "Login Failed!";
-			        JOptionPane.showMessageDialog(jFrame, msg);
-					continue;
-				}
-	
-			}			
-			break;
-		}
+//		JFrame jFrame = new JFrame();
+//        String msg  = "Client Gui Being Made";
+//        JOptionPane.showMessageDialog(jFrame, msg);
+//		
+		
+//		boolean validLogin = false;
 		
 		
+		
+		JFrame Gui = new JFrame("Chat Window");
+		JPanel panel = new JPanel();
+		LayoutManager layout = new FlowLayout();
+		panel.setLayout(layout);
+		
+		JTextField userName = new JTextField();
+		JTextField userPassword = new JTextField();
+		
+		panel.add(userName);
+		panel.add(userPassword);
+		
+		Gui.add(panel);
+		
+		Gui.setSize(560, 200);
+		Gui.setLocationRelativeTo(null); // Center on screen
+		Gui.setVisible(true); // make visible
 		
 
 		

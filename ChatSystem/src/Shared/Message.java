@@ -73,6 +73,16 @@ public class Message implements Serializable{
 	}
 	
 	/**
+	 * Getter method that returns the status in the object
+	 * @return that data class attribute
+	 */
+	public String getStatus() {
+		
+		return status;
+	}
+	
+	
+	/**
 	 * Getter method that returns the date the object was created
 	 * @return the date formatted in American date notation
 	 */
