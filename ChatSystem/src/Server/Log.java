@@ -32,11 +32,25 @@ public class Log {
 	 * *this is to log message
 	 */
 	public void LogMessage() {
-		if(m.getDate().isEmpty()) {
+		Message m1= new Message(null, null, null, null, null, null);
+		Message m2 = new Message(null, null, null, null, null, null);
+		String start = m1.getDate();
+        String end = m2.getDate();
+		while(!m.getData().isEmpty()) {
 			
-			while(m.getDate().contains(m.getFromClient())) {
-				System.out.println(m.getToServer());
-				
+	        for (int j = 0; j < ConversationData.length - 1; j++) {
+	 
+	            if (start.compareTo(end) < 0) {
+	 
+	                String temp = ConversationData[j];
+	                ConversationData[j] = ConversationData[j + 1];
+	                ConversationData[j + 1] = temp;
+	                j = -1;
+	            }
+			}
+			
+			
+		}	
 			}
 			
 			
