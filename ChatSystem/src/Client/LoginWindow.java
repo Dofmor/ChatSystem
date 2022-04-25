@@ -30,28 +30,28 @@ public class LoginWindow implements ClientUserInterface {
 	public void processCommands() {
 		// TODO Auto-generated method stub
 		
-		boolean validLogin = false;
-		
-		JFrame loginMenu = new JFrame("Login Menu");
-		JPanel panel = new JPanel();
-		LayoutManager layout = new FlowLayout();
-		panel.setLayout(layout);
-		
-		JTextField userName = new JTextField();
-		JTextField userPassword = new JTextField();
-		
-		panel.add(userName);
-		panel.add(userPassword);
-		
-		loginMenu.add(panel);
-		
-		loginMenu.setSize(560, 200);
-		loginMenu.setLocationRelativeTo(null); // Center on screen
-		loginMenu.setVisible(true); // make visible
-		
-		
-		
-		
+//		boolean validLogin = false;
+//		
+//		JFrame loginMenu = new JFrame("Login Menu");
+//		JPanel panel = new JPanel();
+//		LayoutManager layout = new FlowLayout();
+//		panel.setLayout(layout);
+//		
+//		JTextField userName = new JTextField();
+//		JTextField userPassword = new JTextField();
+//		
+//		panel.add(userName);
+//		panel.add(userPassword);
+//		
+//		loginMenu.add(panel);
+//		
+//		loginMenu.setSize(560, 200);
+//		loginMenu.setLocationRelativeTo(null); // Center on screen
+//		loginMenu.setVisible(true); // make visible
+//		
+//		
+//		
+//		
 		
 		
 	}

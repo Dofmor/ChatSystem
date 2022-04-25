@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class Server {
-
+	
 	private int port;
 	private ArrayList<ServerThread> serverThreads = new ArrayList<>();
 
