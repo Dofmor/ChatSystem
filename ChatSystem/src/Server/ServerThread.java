@@ -46,6 +46,8 @@ public class ServerThread implements Runnable {
 
 		try {
 			
+			// Wait for a login messages
+			// Continue look if failed login
 			while (SocketOpen) {
 				Message NewMessage = (Message) objectInputStream.readObject();
 				
@@ -69,7 +71,19 @@ public class ServerThread implements Runnable {
 				}
 			}
 			
+			Message m = new Message();
+			m.setType("Chat");
+			m.appendToData("1234");	// Chat ID
+			m.appendToData("Fake Chat Name");	// Chat Name
+			m.appendToData("Harry, Daniel, Nick, Brian, Jacob"); // Members in caht
+			m.appendToData("Harry, 532134, hello1");
+			m.appendToData("Harry, 532134, hello1");
+			objectOutputStream.writeObject(m);
+			objectOutputStream.writeObject(new Message("login", "sfd"+'\n'+"dfsdf", "","","",""));
+
 			
+			
+			//Wait for other client messages after a good login
 			while (SocketOpen) {
 				Message NewMessage = (Message) objectInputStream.readObject();
 				PrintMessage(NewMessage);
@@ -98,6 +112,7 @@ public class ServerThread implements Runnable {
 		}
 		
 		try {
+			//Closing Socket
 			SocketOpen = false;
 			socket.close();
 		} catch (IOException e) {
