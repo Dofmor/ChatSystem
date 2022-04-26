@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 
 class ClientDriver {
 	
-	private static boolean SocketNotClosed = true;
+	public static boolean SocketNotClosed = true;
 	
 	private static int port = 7777;
 	private static InetAddress serverIP;
@@ -56,82 +56,97 @@ class ClientDriver {
 		try {
 			serverIP = InetAddress.getByName("127.0.0.1");
 			socket = new Socket(serverIP, port);
-			
 			outputStream = socket.getOutputStream();
 			objectOutputStream = new ObjectOutputStream(outputStream);
-
-
 			inputStream = socket.getInputStream();
 			objectInputStream = new ObjectInputStream(inputStream);
 			
-			while (SocketNotClosed) {
-				
-				JTextField Username = new JTextField();
-				JTextField Password = new JPasswordField();
-				Object[] Message = {"Username:", Username,"Password:", Password};
-				int optionChoosen = JOptionPane.showConfirmDialog(null, Message, "Login", JOptionPane.OK_CANCEL_OPTION);
-				if (optionChoosen == JOptionPane.OK_OPTION) {
-					if (Login(Username.getText(), Password.getText()) == true) {
-						break;
-					}else {
-						
-						JFrame jFrame = new JFrame();
-				        String msg  = "Login Failed!";
-				        JOptionPane.showMessageDialog(jFrame, msg);
-						continue;
-					}
-		
-				} else {
-					break;
-				}
-			}
+			LoginWindow loginWindow = new LoginWindow(socket, objectOutputStream, objectInputStream);
+			loginWindow.processCommands();
 			
-			ClientGui clientGui = new ClientGui();
-			clientGui.processCommands();
-
+			ChatWindow chatWindow = new ChatWindow(socket, objectOutputStream, objectInputStream);
+			chatWindow.processCommands();
 			
-	         Thread thread = new Thread("New Thread") {
-	             public void run(){
-	            	 
-	            	 try {
 
-	         	        while (SocketNotClosed) {
-	        				Message NewMessage2 = (Message) objectInputStream.readObject();
-	        				PrintMessage(NewMessage2);
-	         	        }
-	            	 }
-	            	 
-	            	catch (IOException e) {
-	         			e.printStackTrace();
-	         		} catch (ClassNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-	            	 
-	             }
-	          };
-
-	        thread.start();
-	       
 
 		} catch (UnknownHostException e) {
 
 			System.out.println("Could not get ip address");
 			return;
 		} catch (IOException e) {
-
 			System.out.println("Could not create socket");
 			return;
-		} finally {
-			 SocketNotClosed = false;
-		     try {
-				objectOutputStream.writeObject(new Message("logout message", "", "","","",""));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		} 
+
+		
+		
+		//
+//		// creating client socket
+//		int port = 7777;
+//		InetAddress serverIP;
+//		Socket socket;
+//		try {
+//			serverIP = InetAddress.getByName("127.0.0.1");
+//			socket = new Socket(serverIP, port);
+//
+//		} catch (UnknownHostException e) {
+//
+//			System.out.println("Could not get ip address");
+//			return;
+//		} catch (IOException e) {
+//
+//			System.out.println("Could not create socket");
+//			return;
+//		}
+//
+//		System.out.println("Test 1");
+//		// creating object streams
+//		OutputStream outputStream;
+//		ObjectOutputStream objectOutput;
+//		InputStream inputStream;
+//		ObjectInputStream objectInput;
+//
+//		System.out.println("Test 2");
+//		try {
+//			System.out.println("Test 3");
+//			outputStream = socket.getOutputStream();
+//			System.out.println("Test 4");
+//
+//			objectOutput = new ObjectOutputStream(outputStream);
+//			System.out.println("Test 5");
+//
+//			inputStream = socket.getInputStream();
+//			System.out.println("Test 6");
+//
+//			objectInput = new ObjectInputStream(inputStream);
+//			System.out.println("Test 7");
+//
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			System.out.println("could not create ObjectOutputStream");
+//
+//			return;
+//		}
+//		
+//		System.out.println("Test 3");
+//		
+//		LoginWindow loginWindow = new LoginWindow(socket, objectOutput, objectInput);
+//		loginWindow.processCommands();
+//		
+//		System.out.println("Test 4");
+//
+//		// closing client socket
+//		try {
+//			socket.close();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 	}
+	
+
+	
 	
 	private static void PrintMessage(Message msg) {
 		System.out.println("Type: " + msg.getType());

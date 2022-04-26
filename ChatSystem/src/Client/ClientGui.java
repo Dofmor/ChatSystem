@@ -4,54 +4,54 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import Shared.Message;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 
 public class ClientGui implements ClientUserInterface {
 	
-	public Boolean Login(String Username, String Password) {
-
-		return false;
-	}
+	private static ObjectOutputStream objectOutputStream;
+	private static ObjectInputStream objectInputStream;
 	
+	public ClientGui(ObjectOutputStream objectOutputStream, ObjectInputStream objectInputStream) {
+		this.objectOutputStream = objectOutputStream;
+		this.objectInputStream = objectInputStream;
+	}
+
+	
+	
+	
+	private static String[] optionsToChoose = {"None of the listed"};
+
+	private static JFrame GuiFrame = new JFrame("Chat Window");;
+	private static JButton SendButton = new JButton("Send");
+	private static JTextField textField = new JTextField("", 20);
+	private static JComboBox ChatChoice = new JComboBox<>(optionsToChoose);
+
 	
 	@Override
 	public void processCommands() {
 		// TODO Auto-generated method stub
-		
-		
-//		JFrame jFrame = new JFrame();
-//        String msg  = "Client Gui Being Made";
-//        JOptionPane.showMessageDialog(jFrame, msg);
-//		
-		
-//		boolean validLogin = false;
-		
-		
-		
-		JFrame Gui = new JFrame("Chat Window");
-		JPanel panel = new JPanel();
-		LayoutManager layout = new FlowLayout();
-		panel.setLayout(layout);
-		
-		JTextField userName = new JTextField();
-		JTextField userPassword = new JTextField();
-		
-		panel.add(userName);
-		panel.add(userPassword);
-		
-		Gui.add(panel);
-		
-		Gui.setSize(560, 200);
-		Gui.setLocationRelativeTo(null); // Center on screen
-		Gui.setVisible(true); // make visible
-		
 
 		
 		
+
 		
 		
 	}
-
+	
+	private static void PrintMessage(Message msg) {
+		System.out.println("Type: " + msg.getType());
+		System.out.println("Status: " + msg.getStatus());
+		System.out.println("Data: " + msg.getData());
+		System.out.println("-----------------------------------------------------------");
+	}
+	
 }

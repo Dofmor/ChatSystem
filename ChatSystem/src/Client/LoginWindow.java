@@ -1,33 +1,80 @@
 package Client;
 
 import java.awt.FlowLayout;
+import java.awt.HeadlessException;
 import java.awt.LayoutManager;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import Shared.Message;
 
 public class LoginWindow implements ClientUserInterface {
 	
-	private Socket socket;
-	private ObjectOutputStream objectOutput;
-	private ObjectInputStream objectInput;
+	private static Socket socket;
+	private static ObjectOutputStream objectOutput;
+	private static ObjectInputStream objectInput;
 	
-	public LoginWindow(Socket sock, ObjectOutputStream output, ObjectInputStream input)  {
+	public static Boolean Login(String Username, String Password) throws ClassNotFoundException {
+		
+		
+		try {
+			objectOutput.writeObject(new Message("login", Username+'\n'+Password, "","","",""));
+			Message NewMessage = (Message) objectInput.readObject();
+			
+			if (NewMessage.getStatus().equals(new String("success"))) {
+				return true;	
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		
+		return false;
+	}
+	
+	
+	public LoginWindow(Socket sock, ObjectOutputStream output, ObjectInputStream input) throws ClassNotFoundException  {
 		socket = sock;
 		objectOutput = output;
 		objectInput = input;
+		
+		while (true) {
+			
+			JTextField Username = new JTextField();
+			JTextField Password = new JPasswordField();
+			Object[] Message = {"Username:", Username,"Password:", Password};
+			int optionChoosen = JOptionPane.showConfirmDialog(null, Message, "Login", JOptionPane.OK_CANCEL_OPTION);
+			if (optionChoosen == JOptionPane.OK_OPTION) {
+				if (Login(Username.getText(), Password.getText()) == true) {
+					break;
+				}else {
+					
+					JFrame jFrame = new JFrame();
+			        String msg  = "Login Failed!";
+			        JOptionPane.showMessageDialog(jFrame, msg);
+					continue;
+				}
+	
+			} else {
+				break;
+			}
+		}
 	}
 	
 
 	@Override
 	public void processCommands() {
+		
+		
 		// TODO Auto-generated method stub
 		
 //		boolean validLogin = false;
