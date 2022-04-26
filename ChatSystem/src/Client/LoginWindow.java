@@ -19,6 +19,8 @@ import Shared.Message;
 
 public class LoginWindow implements ClientUserInterface {
 	
+	private static Client client;
+	
 	private static Socket socket;
 	private static ObjectOutputStream objectOutput;
 	private static ObjectInputStream objectInput;
@@ -42,12 +44,13 @@ public class LoginWindow implements ClientUserInterface {
 	}
 	
 	
-	public LoginWindow(Socket sock, ObjectOutputStream output, ObjectInputStream input) throws ClassNotFoundException  {
+	public LoginWindow(Socket sock, ObjectOutputStream output, ObjectInputStream input, Client Client) throws ClassNotFoundException  {
 		socket = sock;
 		objectOutput = output;
 		objectInput = input;
-		
-		while (true) {
+		client = Client;
+				
+		while (client.SocketNotClosed) {
 			
 			JTextField Username = new JTextField();
 			JTextField Password = new JPasswordField();
@@ -64,7 +67,8 @@ public class LoginWindow implements ClientUserInterface {
 					continue;
 				}
 	
-			} else {
+			} else if (optionChoosen == JOptionPane.CANCEL_OPTION) {
+				client.SocketNotClosed = false;
 				break;
 			}
 		}

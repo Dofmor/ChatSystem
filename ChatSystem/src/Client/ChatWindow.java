@@ -9,6 +9,8 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -41,9 +43,9 @@ import Shared.Message;
 
 public class ChatWindow implements ClientUserInterface {
 
+	private Client client;
+	
 	private ArrayList<ConversationList> conversationList = new ArrayList<>();
-
-	public  boolean SocketNotClosed = true;
 
 	private static Socket socket;
 	private static ObjectOutputStream objectOutput;
@@ -51,50 +53,32 @@ public class ChatWindow implements ClientUserInterface {
 	
 
 	private static JFrame GuiFrame = new JFrame("Chat Window");
-	private static JButton SendButton = new JButton("Send");
-	private static JTextField textField = new JTextField("", 20);
-	private static JPanel LeftSideBar = new JPanel();
-	private static JPanel centerPanel = new JPanel();
-	private static JPanel buttonContainer = new JPanel();
-	private static JScrollPane scrollPane = new JScrollPane(buttonContainer, 
-            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-			
-	private static JTextArea TextArea = new JTextArea(); // suggest columns & rows
-	private static JScrollPane ScrollTextArea = new JScrollPane(TextArea);
-     
-	private static int countButtons = 0;
-	private static int countLines = 0;
+	private static JPanel LeftSideBar = new ConversationList();
+	private static JButton NewChatButton = ((ConversationList) LeftSideBar).NewButton("Create New Chat");
+	
+	
+	
 
+	
+//	private static JButton SendButton = new JButton("Send");
+//	private static JTextField textField = new JTextField("", 20);	
+//	private static JPanel centerPanel = new JPanel();
+//	private static JTextArea TextArea = new JTextArea(); // suggest columns & rows
+//	private static JScrollPane ScrollTextArea = new JScrollPane(TextArea);
+     
+
+	public ChatWindow(Socket sock, ObjectOutputStream output, ObjectInputStream input, Client Client) throws ClassNotFoundException  {
+		socket = sock;
+		objectOutput = output;
+		objectInput = input;
+		client =  Client;
+		
+	}
 	
 	public ChatWindow(Socket sock, ObjectOutputStream output, ObjectInputStream input) throws ClassNotFoundException  {
 		socket = sock;
 		objectOutput = output;
-		objectInput = input;
-		
-		
-        Thread thread = new Thread("New Thread") {
-            public void run(){
-           
-           	 try {
-        	        while (SocketNotClosed) {
-       				Message NewMessage2 = (Message) objectInput.readObject();
-       					PrintMessage(NewMessage2);
-        	        }
-           	 }
-           	 
-           	catch (IOException e) {
-        			e.printStackTrace();
-        		} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-           	 
-            }
-         };
-
-         thread.start();
-      
+		objectInput = input;      
 	}
 
 
@@ -103,88 +87,99 @@ public class ChatWindow implements ClientUserInterface {
 	public void processCommands() {
 		// TODO Auto-generated method stub
 		
-		
+		NewChatButton.setBackground(Color.WHITE);
+		NewChatButton.setForeground(Color.BLACK);
 
 		
-        LeftSideBar.setLayout(new BorderLayout(10, 10));
-        LeftSideBar.add(scrollPane);
-		buttonContainer.setLayout(new GridLayout(1000, 1));
+		int GuiSizeX = 1000;
+		int GuiSizeY = 700;
+		
         GuiFrame.getContentPane().add(LeftSideBar, BorderLayout.WEST);
-        GuiFrame.getContentPane().add(centerPanel, BorderLayout.CENTER);
         GuiFrame.setLocationByPlatform(true);
         GuiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GuiFrame.pack();
         GuiFrame.setVisible(true);
         
-        centerPanel.setLayout(null);
-
-        
-		
-		int GuiSizeX = 1000;
-		int GuiSizeY = 700;
-		
+ 
 		GuiFrame.setSize(GuiSizeX,  GuiSizeY);
 		GuiFrame.setLocation(100, 150);
 		GuiFrame.setResizable(false);
 		GuiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GuiFrame.setDefaultLookAndFeelDecorated(true);
 
-		textField.setBounds(10, 630, 600+75, 25);
-		SendButton.setBounds(700,630,75,24); 
-		
-		centerPanel.add(textField);
-		centerPanel.add(SendButton);
-
-
 		GuiFrame.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
-            	SocketNotClosed = false;
+            	client.SocketNotClosed = false;
             	try {
 					objectOutput.writeObject(new Message("logout message", "", "","","",""));
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-                System.exit(0);
+//                System.exit(0);
             }
         });
 
 
-	
-		countButtons = countButtons + 1;
-        JButton myButton = new JButton("Create New Chat");
-        myButton.setPreferredSize(new Dimension(200, 40));
-		buttonContainer.setLayout(new GridLayout(10, 1));
-		myButton.setBackground(Color.WHITE);
-		myButton.setForeground(Color.BLACK);
-        buttonContainer.add(myButton);
+		//Create a new chat listener
+		NewChatButton.addActionListener((ActionListener) new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                JOptionPane.showMessageDialog(this, textBox.getText());
+            	System.out.println("create new chat pressed");
+            	
+            	String Name = JOptionPane.showInputDialog("Enter Name Of Chat");
+				if (Name == null) { return; }
+				String User = JOptionPane.showInputDialog("Enter a Person To Add To Chat");
+				if (User == null) { return; }
+				try {
+					objectOutput.writeObject(new Message("New Chat", Name+'\n'+User, "","","",""));
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            }
+        });
+		
+
         
         
-        TextArea.setEditable(false);
-       
-        ScrollTextArea.setBounds(10, 10, 750, 600);
-        centerPanel.add(ScrollTextArea);
+//		textField.setBounds(10, 630, 600+75, 25);
+//		SendButton.setBounds(700,630,75,24); 
+//		centerPanel.add(textField);
+//		centerPanel.add(SendButton);
+//        centerPanel.setLayout(null);
+//        GuiFrame.getContentPane().add(centerPanel, BorderLayout.CENTER);
         
+//        TextArea.setEditable(false);
+//       
+//        ScrollTextArea.setBounds(10, 10, 750, 600);
+//        centerPanel.add(ScrollTextArea);
+//     
+
+        
+        
+
 	}
 	
 	
 	public void AddToSideBar(String str) {
-		countButtons = countButtons + 1;
-        JButton myButton = new JButton(str);
-        myButton.setPreferredSize(new Dimension(200, 40));
-        int num = countButtons;
-        if (num < 10) { num = 10; }
-		buttonContainer.setLayout(new GridLayout(num, 1));
-
-        buttonContainer.add(myButton);
+//		countButtons = countButtons + 1;
+//        JButton myButton = new JButton(str);
+//        myButton.setPreferredSize(new Dimension(200, 40));
+//        int num = countButtons;
+//        if (num < 10) { num = 10; }
+//		buttonContainer.setLayout(new GridLayout(num, 1));
+//
+//        buttonContainer.add(myButton);
 	}
 	
 	public void AddToTextArea(String str) {
-		 TextArea.setText(TextArea.getText()+ str + "\n" );
+//		 TextArea.setText(TextArea.getText()+ str + "\n" );
 	}
 	
 	public void ClearTextArea(String str) {
-		 TextArea.setText("");
+//		 TextArea.setText("");
 	}
 	
 	

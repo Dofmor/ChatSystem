@@ -10,7 +10,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public class ServerThread implements Runnable {
-
+	private Boolean SocketOpen = true;
+	
 	protected Person person = null;
 	
 	private Socket socket;
@@ -23,16 +24,29 @@ public class ServerThread implements Runnable {
 	ServerThread(Socket socket, Server server) {
 		this.socket = socket;
 		ServerThread.server = server;
-
+		
 		try {
 			this.outputStream = socket.getOutputStream();
 			this.objectOutputStream = new ObjectOutputStream(outputStream);
 			this.inputStream = socket.getInputStream();
 			this.objectInputStream = new ObjectInputStream(inputStream);
 			
+		} catch (Exception e) {
+			SocketOpen = false;
+			System.out.println("Error:" + socket);
+		}
+
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+
+		System.out.println("Connected: " + socket);
+
+		try {
 			
-			
-			while (true) {
+			while (SocketOpen) {
 				Message NewMessage = (Message) objectInputStream.readObject();
 				
 				if (NewMessage.getType().equals(new String("login"))) {
@@ -56,48 +70,50 @@ public class ServerThread implements Runnable {
 			}
 			
 			
-			while (true) {
+			while (SocketOpen) {
 				Message NewMessage = (Message) objectInputStream.readObject();
-				
+				PrintMessage(NewMessage);
 				if (NewMessage.getType().equals(new String("logout message"))) {
 					NewMessage.setStatus("success");
-					PrintMessage(NewMessage);
 					objectOutputStream.writeObject(NewMessage);
+					SocketOpen = false;
 					break;
 				} else if (NewMessage.getType().equals(new String("text message"))) {
-					PrintMessage(NewMessage);
 					objectOutputStream.writeObject(NewMessage);
+					continue;
 				}
 				
+				// failed to handle message
+				// sending failed message back to client
+				NewMessage.setStatus("fail");
+				objectOutputStream.writeObject(NewMessage);
 			}
 			
-			
-			
-			
-			
-		} catch (Exception e) {
-			System.out.println("Error:" + socket);
+		} catch (IOException e) {
+			SocketOpen = false;
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			SocketOpen = false;
+			e.printStackTrace();
 		}
-
-	}
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		System.out.println("Connected: " + socket);
-
+		
 		try {
-			System.out.println("closing socket");
+			SocketOpen = false;
 			socket.close();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
 		System.out.println("Closed: " + socket);
 
 	}
 	
 	private static void PrintMessage(Message msg) {
-		System.out.println(msg.getType());
-		System.out.println(msg.getData());
+		System.out.println("-----------------------------------------------------------");
+		System.out.println("Type: " + msg.getType());
+		System.out.println("Status: " + msg.getStatus());
+		System.out.println("Data: " + msg.getData());
 	}
 
 }
