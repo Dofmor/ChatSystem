@@ -67,6 +67,12 @@ class ClientDriver {
 			ChatWindow chatWindow = new ChatWindow(socket, objectOutputStream, objectInputStream);
 			chatWindow.processCommands();
 			
+			chatWindow.AddToSideBar("button");
+			for (int i = 0; i < 100; i++) {
+				chatWindow.AddToTextArea("new text");
+			}
+
+
 
 
 		} catch (UnknownHostException e) {
