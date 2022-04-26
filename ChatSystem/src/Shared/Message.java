@@ -54,10 +54,20 @@ public class Message implements Serializable{
 	public void setStatus(String stat) {
 		status = stat;
 	}
+	
+	/**
+	 * Mutator method for the data variable.
+	 * @param data - new status to be assigned
+	 */
+	public void setData(String data) {
+		this.data = data;
+	}
+	
 	/**
 	 * Getter method that returns the type of message 
 	 * @return the type class attribute
 	 */
+	
 	public String getType() {
 		
 		return type;
