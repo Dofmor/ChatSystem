@@ -45,10 +45,12 @@ public class Person {
 		this.loggedIn = loggedIn;
 	}
 	
-	public void login(String username, String password) {
-		if(this.username == username && this.password == password) {
+	public boolean login(String username, String password) {
+		if(this.username.equals(username) && this.password.equals(password)) {
 			setLoggedIn(true);
+			return true;
 		}
+		return false;
 	}
 	
 	public void logout() {
