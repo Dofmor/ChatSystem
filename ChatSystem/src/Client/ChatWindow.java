@@ -76,13 +76,6 @@ public class ChatWindow implements ClientUserInterface {
 		client =  Client;
 		
 	}
-	
-	public ChatWindow(Socket sock, ObjectOutputStream output, ObjectInputStream input) throws ClassNotFoundException  {
-		socket = sock;
-		objectOutput = output;
-		objectInput = input;      
-	}
-
 
 
 	@Override
