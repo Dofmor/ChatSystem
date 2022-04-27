@@ -6,7 +6,7 @@ public class IT{
 	IT(){
 		
 	}
-	//Should be a log type not void since we have to return the log when the function is called on
+	//Calls the log function so we are able to read previous convo data
 	String getChatLog() {
 		//gets the convo data so we are able to read the log
 		return getConversationData();
