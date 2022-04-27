@@ -14,14 +14,14 @@ public class Message implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String type;
-	private String data;
-	private String status;
+	private String type = "";
+	private String data = "";
+	private String status = "";
 	private LocalDateTime dateTime;
-	private String fromClient;
-	private String toClient;
-	private String fromServer;
-	private String toServer;
+	private String fromClient = "";
+	private String toClient = "";
+	private String fromServer = "";
+	private String toServer = "";
 	
 	public Message(String type, String data, String fromClient, String toClient, 
 			String fromServer, String toServer) {
@@ -35,6 +35,10 @@ public class Message implements Serializable{
 		this.fromServer = fromClient;
 		this.toServer = toServer;
 		
+	}
+	
+	public Message() {
+		setDate();
 	}
 	
 	
@@ -163,6 +167,19 @@ public class Message implements Serializable{
 				"," + getToClient() + "," + getFromServer() + "," + getToServer();
 		 
 		return str;
+	}
+	
+	
+	/**
+	 * 
+	 * 
+	 */
+	public void appendToData(String str) {
+		data = data + str + "\n";
+	}
+
+	public void setType(String string) {
+		type = string;
 	}
 	
 	

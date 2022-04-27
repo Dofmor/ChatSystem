@@ -33,6 +33,7 @@ public class Client {
 	private static ChatWindow chatWindow;
 
 
+
 	public static Boolean Login(String Username, String Password) throws ClassNotFoundException {
 		
 		try {
@@ -68,12 +69,43 @@ public class Client {
 			loginWindow = new LoginWindow(socket, objectOutputStream, objectInputStream, this);
 			loginWindow.processCommands();
 			
-			if (SocketNotClosed) {
-				chatWindow = new ChatWindow(socket, objectOutputStream, objectInputStream,  this);
+//	        Thread thread = new Thread("New Thread") {
+//	            public void run(){
+//	            	
+//					
+//	            }
+//	        };
+//
+//	        thread.start();
+	         
+	         
+	        if (SocketNotClosed) {
+	        	chatWindow = new ChatWindow(socket, objectOutputStream, objectInputStream,  this);
 				chatWindow.processCommands();
-			}
+	        }
 
-			
+	        
+	        try {
+				while (SocketNotClosed) {
+					Message NewMessage = (Message) objectInputStream.readObject();
+					PrintMessage(NewMessage);
+					if (NewMessage.getType().equals(new String("logout message"))) {
+						if (NewMessage.getStatus().equals(new String("success"))) {
+							System.out.println("Closing");
+							SocketNotClosed = false;
+							break;
+						}
+					} else if (NewMessage.getType().equals(new String("Chat"))) {
+						chatWindow.NewConversationMessage(NewMessage);
+					}
+					
+					
+				}
+			} catch (ClassNotFoundException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        
 			
 //			chatWindow.AddToSideBar("button");
 //			for (int i = 0; i < 100; i++) {
@@ -81,30 +113,7 @@ public class Client {
 //			}
 			
 			
-	        Thread thread = new Thread("New Thread") {
-	            public void run(){
-	            	try {
-						while (SocketNotClosed) {
-							Message NewMessage = (Message) objectInputStream.readObject();
-							PrintMessage(NewMessage);
-							if (NewMessage.getType().equals(new String("logout message"))) {
-								if (NewMessage.getStatus().equals(new String("success"))) {
-									System.out.println("Closing");
-									SocketNotClosed = false;
-									break;
-								}
-							}
-						}
-					} catch (ClassNotFoundException | IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
-	            }
-	         };
 
-	         thread.start();
-	         
 			
 
 		
