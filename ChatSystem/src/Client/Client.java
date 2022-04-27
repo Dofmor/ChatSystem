@@ -33,6 +33,7 @@ public class Client {
 	private static ChatWindow chatWindow;
 
 
+
 	public static Boolean Login(String Username, String Password) throws ClassNotFoundException {
 		
 		try {
@@ -94,7 +95,11 @@ public class Client {
 							SocketNotClosed = false;
 							break;
 						}
+					} else if (NewMessage.getType().equals(new String("Chat"))) {
+						chatWindow.NewConversationMessage(NewMessage);
 					}
+					
+					
 				}
 			} catch (ClassNotFoundException | IOException e) {
 				// TODO Auto-generated catch block

@@ -11,11 +11,15 @@ import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StringReader;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
@@ -43,26 +47,24 @@ import Shared.Message;
 
 public class ChatWindow implements ClientUserInterface {
 
-	private Client client;
-	
-	private ArrayList<ConversationList> conversationList = new ArrayList<>();
-
+	private static Client client;
 	private static Socket socket;
 	private static ObjectOutputStream objectOutput;
 	private static ObjectInputStream objectInput;
 	
-
+	private static JButton ChatSendButton = new JButton("Send");
+	private static JButton AddUserSendButton = new JButton("Add User");
 	private static JFrame GuiFrame = new JFrame("Chat Window");
-	private static JPanel LeftSideBar = new ConversationList();
-	private static JButton NewChatButton = ((ConversationList) LeftSideBar).NewButton("Create New Chat");
+	private static JPanel ConversationList= new ConversationList(GuiFrame,ChatSendButton,AddUserSendButton);
+	private static JButton NewChatButton = ((ConversationList) ConversationList).NewButton("Create New Chat");
 	
+
 	
 	
 
 	
 //	private static JButton SendButton = new JButton("Send");
 //	private static JTextField textField = new JTextField("", 20);	
-//	private static JPanel centerPanel = new JPanel();
 //	private static JTextArea TextArea = new JTextArea(); // suggest columns & rows
 //	private static JScrollPane ScrollTextArea = new JScrollPane(TextArea);
      
@@ -94,7 +96,7 @@ public class ChatWindow implements ClientUserInterface {
 		int GuiSizeX = 1000;
 		int GuiSizeY = 700;
 		
-        GuiFrame.getContentPane().add(LeftSideBar, BorderLayout.WEST);
+        GuiFrame.getContentPane().add(ConversationList, BorderLayout.WEST);
         GuiFrame.setLocationByPlatform(true);
         GuiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GuiFrame.pack();
@@ -105,11 +107,11 @@ public class ChatWindow implements ClientUserInterface {
 		GuiFrame.setLocation(100, 150);
 		GuiFrame.setResizable(false);
 		GuiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		GuiFrame.setDefaultLookAndFeelDecorated(true);
+		JFrame.setDefaultLookAndFeelDecorated(true);
 
 		GuiFrame.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
-            	client.SocketNotClosed = false;
+            	Client.SocketNotClosed = false;
             	try {
 					objectOutput.writeObject(new Message("logout message", "", "","","",""));
 				} catch (IOException e1) {
@@ -143,45 +145,121 @@ public class ChatWindow implements ClientUserInterface {
 		
 
         
-        
-//		textField.setBounds(10, 630, 600+75, 25);
-//		SendButton.setBounds(700,630,75,24); 
-//		centerPanel.add(textField);
-//		centerPanel.add(SendButton);
-//        centerPanel.setLayout(null);
-//        GuiFrame.getContentPane().add(centerPanel, BorderLayout.CENTER);
-        
-//        TextArea.setEditable(false);
-//       
-//        ScrollTextArea.setBounds(10, 10, 750, 600);
-//        centerPanel.add(ScrollTextArea);
-//     
+		
+		ChatSendButton.addActionListener((ActionListener) new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	System.out.println("send button pressed");
+            	if (((ConversationList) ConversationList).ChatOpened) {
+            		
+            		String currentChatId = ((ConversationList) ConversationList).getCurrentId();
+            		
+            		if (currentChatId.equals(new String("-1"))) {} else {
+                		String text = ((ConversationList) ConversationList).getTextForSending();
 
-        
-        
+                		try {
 
+                			Message newMsg = new Message();
+                			newMsg.setType("Message");
+                			newMsg.appendToData(currentChatId);
+                			newMsg.appendToData(text);
+    						objectOutput.writeObject(newMsg);
+    						
+                		} catch (IOException e1) {
+    						// TODO Auto-generated catch block
+    						e1.printStackTrace();
+    					}
+            		}
+            		
+            		
+
+            	}
+            }
+        });
+		
+		AddUserSendButton.addActionListener((ActionListener) new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	System.out.println("send button pressed");
+            	if (((ConversationList) ConversationList).ChatOpened) {
+
+            		String currentChatId = ((ConversationList) ConversationList).getCurrentId();
+            		if (currentChatId.equals(new String("-1"))) {} else {
+                		String Name = JOptionPane.showInputDialog("Enter User To Add");
+                		if (Name == null) { return; }
+                		try {
+                			Message newMsg = new Message();
+                			newMsg.setType("New Chat User");
+                			newMsg.appendToData(currentChatId);
+                			newMsg.appendToData(Name);
+    						objectOutput.writeObject(newMsg);
+    					} catch (IOException e1) {
+    						// TODO Auto-generated catch block
+    						e1.printStackTrace();
+    					}
+            		}
+            		
+            		
+            	}
+            }
+        });
 	}
 	
-	
-	public void AddToSideBar(String str) {
-//		countButtons = countButtons + 1;
-//        JButton myButton = new JButton(str);
-//        myButton.setPreferredSize(new Dimension(200, 40));
-//        int num = countButtons;
-//        if (num < 10) { num = 10; }
-//		buttonContainer.setLayout(new GridLayout(num, 1));
+	public void NewConversationMessage(Message Message) {
+		
+		String Chat_ID = "";
+		String Chat_Name = "";
+		List<String> Members = null;		
+		ArrayList<String[]> Chats = new ArrayList<String[]>();
+		
+		
+		List<String> DataList = Arrays.asList(Message.getData().split("\n"));
+		for (int i = 0; i < DataList.size(); i++) {
+			
+			switch(i) {
+
+				case 0: Chat_ID = DataList.get(i);
+						break;
+				case 1: Chat_Name = DataList.get(i);
+						break;
+				case 2: 
+						Members = Arrays.asList( DataList.get(i).split(", "));	
+						break;
+			    default :
+			    	List<String> tempList = Arrays.asList(DataList.get(i).split(", "));
+			    	String[] Array  = new String[tempList.size()];
+			    	for (int j = 0; j < tempList.size(); j++) {
+			    		Array[j] = tempList.get(j);
+			    	}
+			    	Chats.add(Array);
+			}
+		}
+				
+		((ConversationList) ConversationList).UpdateOrCreateChat(Chat_Name,Chat_ID,Members,Chats);
+
+		//Print All Variables
+//		System.out.println("\"" + Chat_ID + "\"");
+//		System.out.println("\"" + Chat_Name + "\"");
 //
-//        buttonContainer.add(myButton);
+//		for (int i = 0; i < Members.size(); i++) {
+//			System.out.print("\"");
+//			System.out.print(Members.get(i));
+//			System.out.print("\" ");
+//		} System.out.println("");
+//
+//		
+//		for (int i = 0; i < Chats.size(); i++) {
+//			;
+//			for (int j = 0; j < Chats.get(i).length; j++) {
+//				System.out.print("\"");
+//				System.out.print(Chats.get(i)[j]);
+//				System.out.print("\" ");
+//			}
+//			System.out.println("");
+//		}
+
+		
 	}
-	
-	public void AddToTextArea(String str) {
-//		 TextArea.setText(TextArea.getText()+ str + "\n" );
-	}
-	
-	public void ClearTextArea(String str) {
-//		 TextArea.setText("");
-	}
-	
 	
 
 	private static void PrintMessage(Message msg) {
