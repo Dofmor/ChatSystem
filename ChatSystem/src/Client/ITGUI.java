@@ -1,16 +1,31 @@
+package Client;
+
+
 import javax.swing.*;
+
+import Shared.Message;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 
 public class ITGUI implements ITuserInterface {
+	private static Client client;
+	private static Socket socket;
+	private static ObjectOutputStream objectOutput;
+	private static ObjectInputStream objectInput;
+	
 	public void processCommands(){
+		 createWindow();
 	}
 
-	 IT techPerson;
+//	 IT techPerson;
 	 //Creates a frame variable to hold the frame
 	 private JFrame frame;
 	 //Created a panel variable to hold the panel
@@ -18,10 +33,14 @@ public class ITGUI implements ITuserInterface {
 	 Box infoBox;
 	 JLabel temp, tempTitle;
 
-	 public ITGUI(){
-		 techPerson = new IT();
-		 createWindow();
-	 }
+
+	 
+	public ITGUI(Socket sock, ObjectOutputStream output, ObjectInputStream input, Client Client) throws ClassNotFoundException  {
+		socket = sock;
+		objectOutput = output;
+		objectInput = input;
+		client =  Client;	
+	}
 	 
 //	 //Creates the GUI window
 	 public void createWindow(){
@@ -96,10 +115,6 @@ public class ITGUI implements ITuserInterface {
 	
 	//MODIFY DVD WITH PARAMS FOR MODIFY BUTTON
 	private void createUser() {
-		String name = JOptionPane.showInputDialog("Enter name");
-		if (name == null) {
-			return;		// dialog was cancelled
-		}
 		String userName = JOptionPane.showInputDialog("Enter Username");
 		if (userName == null) {
 			return;		// dialog was cancelled
@@ -113,32 +128,59 @@ public class ITGUI implements ITuserInterface {
 			return;		// dialog was cancelled
 		}
 
-		techPerson.createUser(name, userName, passWord, userType);
+		Message m = new Message();
+		m.setType("Create User");
+		m.appendToData(userName);
+		m.appendToData(passWord);
+		m.appendToData(userType);
+
+		try {
+			objectOutput.writeObject(m);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	// Send Message
+		
+//		techPerson.createUser(name, userName, passWord, userType);
 	}
 
 	private void deleteUser() {
-		String name = JOptionPane.showInputDialog("Enter name");
-		if (name == null) {
-			return;		// dialog was cancelled
-		}
 		String userName = JOptionPane.showInputDialog("Enter Username");
 		if (userName == null) {
 			return;		// dialog was cancelled
 		}
-		String passWord = JOptionPane.showInputDialog("Enter Password");
-		if (passWord == null) {
-			return;		// dialog was cancelled
-		}
-		String userType = JOptionPane.showInputDialog("Enter User Type");
-		if (userType == null) {
-			return;		// dialog was cancelled
-		}
 
-		techPerson.deleteUser(name, userName, passWord, userType);	
+		
+		Message m = new Message();
+		m.setType("Delete User");
+		m.appendToData(userName);
+		
+		try {
+			objectOutput.writeObject(m);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	// Send Message
+		
+//		techPerson.deleteUser(name, userName, passWord, userType);	
 	}
 	
 	private void getChatLog() {
-		temp.setText(techPerson.getChatLog());
-		frame.getContentPane();
+//		temp.setText(techPerson.getChatLog());
+//		frame.getContentPane();
+		
+		Message m = new Message();
+		m.setType("Get Chat Log");
+		
+		try {
+			objectOutput.writeObject(m);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	// Send Message
+	}
+	
+	public void SetGuiText(String str) {
+		temp.setText(str);
 	}
 }

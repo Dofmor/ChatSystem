@@ -1,17 +1,24 @@
-package Server
+package Server;
 
 //This class should extend server to be able to access logs and users
 public class IT extends Person{
 	
-	IT(){
-		
-	}
-	//Calls the log function so we are able to read previous convo data
-	String getChatLog() {
-		//gets the convo data so we are able to read the log
-		return getConversationData();
-	}
 	
+
+	public IT(String username, String password, String userType) {
+		super(username, password, userType);
+		// TODO Auto-generated constructor stub
+	}
+
+	//Calls the log function so we are able to read previous convo data
+//	public String getChatLog() {
+//		//gets the convo data so we are able to read the log
+//		return log.getConversationData();
+//	}
+	
+
+
+
 	/**
 	 * 
 	 * @param name
@@ -23,11 +30,9 @@ public class IT extends Person{
 	 * then the user is added to the array of users within the server
 	 */
 	void createUser(String name, String username, String password, String userType){
-		Person userTemp = new Person();
-		userTemp.name = name;
-		userTemp.username = username;
-		userTemp.password = password;
-		userTemp.userType = userType;
+		Person userTemp = new Person(username, password, userType);
+		
+		
 		
 		//ADD WAY TO ADD USER TO THE USERS ARRAY IN THE SERVER
 		//addUser(userTemp);
@@ -44,11 +49,8 @@ public class IT extends Person{
 	 * then the user is removed from the array of users within the server if they exist
 	 */
 	void deleteUser(String name, String username, String password, String userType){
-		Person userTemp = new Person();
-		userTemp.name = name;
-		userTemp.username = username;
-		userTemp.password = password;
-		userTemp.userType = userType;
+		Person userTemp = new Person(username, password, userType);
+
 		
 		//ADD WAY TO Remove USER TO THE USERS ARRAY IN THE SERVER
 		//removeUser(userTemp);

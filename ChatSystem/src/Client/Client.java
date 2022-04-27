@@ -31,6 +31,7 @@ public class Client {
 	
 	private static LoginWindow loginWindow;
 	private static ChatWindow chatWindow;
+	private static ITGUI itWindow;
 
 
 
@@ -83,6 +84,11 @@ public class Client {
 	        	chatWindow = new ChatWindow(socket, objectOutputStream, objectInputStream,  this);
 				chatWindow.processCommands();
 	        }
+	        
+	        if (SocketNotClosed) {
+	        	itWindow = new ITGUI(socket, objectOutputStream, objectInputStream,  this);
+	        	itWindow.processCommands();
+	        }
 
 	        
 	        try {
@@ -97,6 +103,8 @@ public class Client {
 						}
 					} else if (NewMessage.getType().equals(new String("Chat"))) {
 						chatWindow.NewConversationMessage(NewMessage);
+					} else if (NewMessage.getType().equals(new String("IT Command Return Info"))) {
+						itWindow.SetGuiText(NewMessage.getData());
 					}
 					
 					
