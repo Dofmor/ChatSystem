@@ -1,7 +1,7 @@
 package Server
 
 //This class should extend server to be able to access logs and users
-public class IT{
+public class IT extends Person{
 	
 	IT(){
 		
