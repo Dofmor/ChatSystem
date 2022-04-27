@@ -22,9 +22,8 @@ public class IT extends Person{
 	 * This function is to create a user based on the information given by it
 	 * then the user is added to the array of users within the server
 	 */
-	void createUser(String name, String username, String password, String userType){
+	void createUser(String username, String password, String userType){
 		Person userTemp = new Person();
-		userTemp.name = name;
 		userTemp.username = username;
 		userTemp.password = password;
 		userTemp.userType = userType;
@@ -43,9 +42,8 @@ public class IT extends Person{
 	 * This function is to delete a user based on the information given by it
 	 * then the user is removed from the array of users within the server if they exist
 	 */
-	void deleteUser(String name, String username, String password, String userType){
+	void deleteUser(String username, String password, String userType){
 		Person userTemp = new Person();
-		userTemp.name = name;
 		userTemp.username = username;
 		userTemp.password = password;
 		userTemp.userType = userType;
