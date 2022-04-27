@@ -94,7 +94,6 @@ public class ITGUI implements ITuserInterface {
 	    }
 	 
 	
-	//MODIFY DVD WITH PARAMS FOR MODIFY BUTTON
 	private void createUser() {
 		String name = JOptionPane.showInputDialog("Enter name");
 		if (name == null) {
