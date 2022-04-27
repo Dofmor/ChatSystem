@@ -48,27 +48,32 @@ public class ServerThread implements Runnable {
 			
 			// Wait for a login messages
 			// Continue look if failed login
-			while (SocketOpen) {
-				Message NewMessage = (Message) objectInputStream.readObject();
-				
-				if (NewMessage.getType().equals(new String("login"))) {
-					
-					
-					if (true) { //if login success
-						NewMessage.setStatus("success");
-						objectOutputStream.writeObject(NewMessage);
-						PrintMessage(NewMessage);
-						
-						break;
-//					} else {
-//						NewMessage.setStatus("failed");
+//			while (SocketOpen) {
+//				Message NewMessage = (Message) objectInputStream.readObject();
+//				
+//				if (NewMessage.getType().equals(new String("login"))) {
+//					
+//					
+//					if (true) { //if login success
+//						NewMessage.setStatus("success");
 //						objectOutputStream.writeObject(NewMessage);
-					}
-				} else {
-					System.out.println("message ignored: "
-							+ socket.getInetAddress()
-									.getHostAddress());
-				}
+//						PrintMessage(NewMessage);
+//						
+//						break;
+////					} else {
+////						NewMessage.setStatus("failed");
+////						objectOutputStream.writeObject(NewMessage);
+//					}
+//				} else {
+//					System.out.println("message ignored: "
+//							+ socket.getInetAddress()
+//									.getHostAddress());
+//				}
+//			}
+			
+			while(this.person == null || this.person.isLoggedIn() == false) {
+				Message NewMessage = (Message) objectInputStream.readObject();
+				login(NewMessage);
 			}
 			
 //			//For Testing
@@ -148,6 +153,44 @@ public class ServerThread implements Runnable {
 		System.out.println("Type: " + msg.getType());
 		System.out.println("Status: " + msg.getStatus());
 		System.out.println("Data: " + msg.getData());
+	}
+	
+	private void login(Message m) {
+		// validate that login() is being used correctly
+		if(m.getType().equals("login") == false) return; 
+		String[] parts = m.getData().split("\n");
+		if(parts.length < 2) return;
+		String username = parts[0];
+		String password = parts[1];
+		if (person == null || person.isLoggedIn() != false) {
+			for (Person user : server.getUsers()) {
+				// check to see if login information matches any user currently registered.
+				if (user.login(username, password) == true) {
+					// assign this thread to be associated with a user if login information is
+					// correct
+					this.person = user;
+					try {
+						// send successful login information back to server
+						m.setStatus("success");
+						m.setData(user.getUserType());
+						objectOutputStream.writeObject(m);
+						System.out.println("{ \nUser : " + username + "\nPassword : " + password +  "\nlogged in successfully\n}");
+						return;
+					} catch (IOException e) {
+			
+					}
+				}
+			}
+
+			// user login information not found
+			try {
+				m.setStatus("failed");
+				objectOutputStream.writeObject(m);
+				System.out.println("{ \nUser : " + username + "\nPassword : " + password +  "\nfailed to login\n}");
+			} catch (IOException e) {
+				
+			}
+		}
 	}
 
 }
