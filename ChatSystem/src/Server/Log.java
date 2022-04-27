@@ -1,65 +1,120 @@
 package Server;
 
-import Shared.*;
+package logs;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+import java.util.Scanner;
+import java.util.StringTokenizer;
 
-public class Log {
-	private Message m;
+public class log {
+	private Messages[] m;
+	private Messages m1;
 	/** this is to call from message /
 	 * 
 	 * @return
 	 */
 	private String[] ConversationData;
+	/**conversation data
+	 * 
+	 */
 	private String[] UserData;
 	
+	private String [][] ConversationDate= { (String[])  ConversationData};
+	
+	/**
+	 * 
+	 * This is the user data
+	 */
+	List<String> log;
+	String fileName;
+	File file;
+
 	
 
 
 
 
-	public Log(Message m, String[] conversationData, String[] userData) {
+
+public log(Messages[] m, String[] conversationData, String[] userData, String[][] conversationDate, Messages m1) {
 		this.m = m;
 		ConversationData = conversationData;
 		UserData = userData;
+		ConversationDate = conversationDate;
+		this.m1=m1;
 	}
 
 
+		
 
+	void loadlog() {
+		 String line;
 
+	       boolean found = false;
+	       Scanner in = null;
 
+		try {
+          Scanner scanner= new Scanner(fileName);
+          while (scanner.hasNextLine()) {
+          	String data = scanner.nextLine();
+          	System.out.println(data);
+          }
+          scanner.close();
+      } catch (Exception e) {
+      System.out.println(e);
+      }
+		
+		 if (found) {
+	           while (in.hasNext()) {
+	               line = in.nextLine();
+	               StringTokenizer st = new StringTokenizer(line, ",");
+	         
+	           }
+	       } else {
+	           new Messages();
+	       }
+		}
 
-	/*
-	 * *this is to log message
-	 */
+	void addMessage() {
+		//format message
+		String formattedMsg = ""; //formatted message should be date, time, sender, receivers, message
+		Messages m =new Messages(formattedMsg, formattedMsg, formattedMsg, formattedMsg, formattedMsg, formattedMsg);
+		log.add(formattedMsg);
+		m.getToServer();
+		} 
+	
+
+	void saveLog() {
+		String filename = fileName;
+		File chat = new File(filename);
+
+				//write a new file
+				try {
+		    		if(chat.createNewFile()) { 
+						FileWriter myWriter = new FileWriter(filename); 
+						myWriter.write(this.toString());
+						myWriter.close(); 
+					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+		} 
+	
 	public void LogMessage() {
-		if(m.getDate().isEmpty()) {
-			
-			while(m.getDate().contains(m.getFromClient())) {
-				System.out.println(m.getToServer());
-				
-			}
-			
-			
-		}
-			/** 
-			 * null is a place holder for message array
-			 * message will be organized by date of publish
-			 *  and if if message date list is empty then the array do nothing
-			 *  then if message date is full then 
-			 *  it go in a tranversal loop to reveal all the message said in that date
-			 *
-			 */
-			
-		}
-		
-		
-		
+		m1.getFromServer();
+		m1.getFromClient();
+		loadlog();
+		addMessage();
+		saveLog();
 	
-	
+		}
 	
 	public void sendLogs() {
 		LogMessage();
-		m.getToServer();
+		saveLog();
+		m1.getToServer();
 		
 		/**
 		 *  this is to send message logs to the server
@@ -73,31 +128,31 @@ public class Log {
 
 
 
-	public Message getM() {
+
+
+
+
+	public Messages[] getM() {
 		return m;
 	}
 
-
-
-
-
-
-	public void setM(Message m) {
+	public void setM(Messages[] m) {
 		this.m = m;
 	}
+	
+	
 
+	public Messages getM1() {
+		return m1;
+	}
 
-
-
-
+	public void setM1(Messages m1) {
+		this.m1 = m1;
+	}
 
 	public String[] getConversationData() {
 		return ConversationData;
 	}
-
-
-
-
 
 
 	public void setConversationData(String[] conversationData) {
@@ -121,7 +176,17 @@ public class Log {
 	public void setUserData(String[] userData) {
 		UserData = userData;
 	}
-
+	
 	
 
-}
+	public String[][] getConversationDate() {
+		return ConversationDate;
+	}
+
+	public void setConversationDate(String[][] conversationDate) {
+		ConversationDate = conversationDate;
+	}
+	
+
+	}
+
