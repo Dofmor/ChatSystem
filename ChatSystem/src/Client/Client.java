@@ -31,7 +31,7 @@ public class Client {
 	
 	private static LoginWindow loginWindow;
 	private static ChatWindow chatWindow;
-	private static ITGUI itWindow;
+	private static ITWindow itWindow;
 
 
 
@@ -86,7 +86,7 @@ public class Client {
 	        }
 	        
 	        if (SocketNotClosed) {
-	        	itWindow = new ITGUI(socket, objectOutputStream, objectInputStream,  this);
+	        	itWindow = new ITWindow(socket, objectOutputStream, objectInputStream,  this);
 	        	itWindow.processCommands();
 	        }
 
@@ -114,18 +114,7 @@ public class Client {
 				e.printStackTrace();
 			}
 	        
-			
-//			chatWindow.AddToSideBar("button");
-//			for (int i = 0; i < 100; i++) {
-//				chatWindow.AddToTextArea("new text");
-//			}
-			
-			
-
-			
-
 		
-
 		} catch (UnknownHostException e) {
 			System.out.println("Could not get ip address");
 			return;

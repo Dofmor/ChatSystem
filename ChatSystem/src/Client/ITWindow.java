@@ -15,7 +15,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 
-public class ITGUI implements ITuserInterface {
+public class ITWindow implements ClientUserInterface {
 	private static Client client;
 	private static Socket socket;
 	private static ObjectOutputStream objectOutput;
@@ -35,7 +35,7 @@ public class ITGUI implements ITuserInterface {
 
 
 	 
-	public ITGUI(Socket sock, ObjectOutputStream output, ObjectInputStream input, Client Client) throws ClassNotFoundException  {
+	public ITWindow(Socket sock, ObjectOutputStream output, ObjectInputStream input, Client Client) throws ClassNotFoundException  {
 		socket = sock;
 		objectOutput = output;
 		objectInput = input;
