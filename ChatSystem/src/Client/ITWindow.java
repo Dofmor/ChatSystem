@@ -180,6 +180,6 @@ public class ITWindow implements ClientUserInterface {
 	}
 	
 	public void SetGuiText(String str) {
-		temp.setText(str);
+		
 	}
 }
