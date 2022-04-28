@@ -31,9 +31,7 @@ public class IT extends Person{
 	 */
   void createUser(String name, String username, String password, String userType){
 		Person userTemp = new Person(username, password, userType);
-		
-		//ADD WAY TO ADD USER TO THE USERS ARRAY IN THE SERVER
-		//addUser(userTemp);
+		profiles.add(userTemp);
 	}
 	
   
