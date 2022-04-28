@@ -19,9 +19,11 @@ public class Server {
 	private ArrayList<Conversation> conversations = new ArrayList<>();
 	private String profilesFile = "profiles.txt";
 	private String conversationsFile =  "conversationFile";
+	private int chatId;
 
 	public Server(int port) {
 		this.port = port;
+		chatId = 0;
 	}
 
 	public ArrayList<Person> getUsers() {
@@ -111,6 +113,12 @@ public class Server {
 		// TODO Auto-generated method stub
 
 		ServerSocket server;
+		try {
+			readProfiles();
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			System.out.println("File not found");
+		}
 		
 		//FAKE USERS FOR TESTING
 		profiles.add(new Person("user1","pass1","it"));
