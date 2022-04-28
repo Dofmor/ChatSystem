@@ -2,6 +2,7 @@ package Server;
 
 import Shared.*;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -306,6 +307,83 @@ public class ServerThread implements Runnable {
 		} catch (IOException e) {
 			
 		}
+	}
+	
+	
+	
+	//IT methods
+	private void createUser(Message m) {
+		if(this.person.getUserType().toLowerCase().equals("it") == false || m.getType().equals("create user") == false) {
+			return;
+		}
+		List<String> dataList = Arrays.asList(m.getData().split("\n"));
+		if(dataList.size() < 3) {
+			System.out.println("Not enough data to create user");
+			return;
+		}
+		//data list contains username, password, userType
+		//verify the user doesn't exist
+		for(int i = 0; i < server.getProfiles().size(); i++) {
+			if(server.getProfiles().get(i).getUsername().equals(dataList.get(0))) {
+				System.out.println("User already exists ");
+				m.setType("IT command return Info");
+				m.setData("user already exists");
+				send(m);
+				return;
+			}
+		}
+		
+		
+		server.getProfiles().add(new Person(dataList.get(0),dataList.get(0),dataList.get(0)));
+		//save the current state of profiles to a file
+		try {
+			server.saveProfiles(server.getProfiles());
+		} catch (FileNotFoundException e) {
+			System.out.println(e);
+		}
+		System.out.println("Created new user ");
+		m.setType("IT command return Info");
+		m.setData("new user created");
+		send(m);
+	}
+	
+	private void deleteUser(Message m) {
+		if(this.person.getUserType().toLowerCase().equals("it") == false || m.getType().equals("delete user") == false) {
+			return;
+		}
+		String username = m.getData();
+		if(username.equals("")) return;
+		//find the username in current profiles list
+		for(int i = 0; i < server.getProfiles().size(); i++) {
+			if(server.getProfiles().get(i).getUsername().equals(username)) {
+				//delete user when found
+				server.getProfiles().remove(i);
+				System.out.println("Deleted user");
+				m.setType("IT command return Info");
+				m.setData("deleted user");
+				send(m);
+				//save the current state of profiles to a file
+				try {
+					server.saveProfiles(server.getProfiles());
+				} catch (FileNotFoundException e) {
+					System.out.println(e);
+				}
+				return;
+			}
+		}
+		System.out.println("Could not find user to delete");
+		m.setType("IT command return Info");
+		m.setData("Could not find user to delete");
+		send(m);
+	}
+	
+	private void getLog(Message m) {
+		if(this.person.getUserType().toLowerCase().equals("it") == false || m.getType().equals("get chat log") == false) {
+			return;
+		}
+		
+		//call server.log.getChatLog();
+		//send chatlog as message back to server
 	}
 	
 	
