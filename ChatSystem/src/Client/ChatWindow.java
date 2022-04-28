@@ -399,7 +399,7 @@ public class ChatWindow implements ClientUserInterface  {
 			AddUserSendButton.addActionListener((ActionListener) new ActionListener() {
 	          @Override
 	          public void actionPerformed(ActionEvent e) {
-	          	System.out.println("send button pressed");
+//	          	System.out.println("Add User button pressed");
 	          	if (ChatOpened) {
 	
 	          		String currentChatId = CurrentConvo.ID;
@@ -498,7 +498,7 @@ public class ChatWindow implements ClientUserInterface  {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 //              JOptionPane.showMessageDialog(this, textBox.getText());
-				System.out.println("create new chat pressed");
+//				System.out.println("create new chat pressed");
           	
 	          	String Name = JOptionPane.showInputDialog("Enter Name Of Chat");
 					if (Name == null) { return; }
@@ -588,7 +588,6 @@ public class ChatWindow implements ClientUserInterface  {
 				Conversations.get(i).Name = newConvo.Name;
 				Conversations.get(i).Members = newConvo.Members;
 				Conversations.get(i).Chats = newConvo.Chats;
-				System.out.println("NOOOOOOOOOOOOOOOOOO");
 				return;
 			}
 		}
@@ -605,7 +604,7 @@ public class ChatWindow implements ClientUserInterface  {
             	ChatOpened = true;
             	CurrentConvo = newConvo;
             	UpdateChatText();
-            	System.out.println(CurrentConvo.ID);
+//            	System.out.println(CurrentConvo.ID);
                 setChatVisible(true);
                 
                 Message newMsg = new Message();

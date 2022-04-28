@@ -62,16 +62,12 @@ public class LoginWindow implements ClientUserInterface {
 				
 				if (true) {
 					if (Username1.equals(new String(""))) {
-						Username1 = "user1";
+						Username1 = " ";
 					}
 					if (Password1.equals(new String(""))) {
-						Password1 = "pass1";
+						Password1 = " ";
 					}
 				}
-
-				
-				System.out.println(Username1);
-				System.out.println(Password1);
 				
 				if (Login(Username1,Password1) == true) {
 					break;
