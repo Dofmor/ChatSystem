@@ -38,7 +38,7 @@ public class Client {
 	public static Boolean Login(String Username, String Password) throws ClassNotFoundException {
 		
 		try {
-			objectOutputStream.writeObject(new Message("login", Username+'\n'+Password, "","","",""));
+			objectOutputStream.writeObject(new Message("login message", Username+'\n'+Password, "","","",""));
 			Message NewMessage = (Message) objectInputStream.readObject();
 			PrintMessage(NewMessage);
 			
@@ -82,14 +82,25 @@ public class Client {
 	         
 	        if (SocketNotClosed) {
 	        	chatWindow = new ChatWindow(socket, objectOutputStream, objectInputStream,  this);
+//		        chatWindow.Test("Test 5");
+
 				chatWindow.processCommands();
 	        }
-	        
+
 	        if (SocketNotClosed) {
 	        	itWindow = new ITWindow(socket, objectOutputStream, objectInputStream,  this);
 	        	itWindow.processCommands();
 	        }
-
+	        chatWindow.Test("Test 10");
+	        chatWindow.Test("Test 11");
+	        chatWindow.Test("Test 10");
+	        chatWindow.Test("Test 11");	        
+	        chatWindow.Test("Test 10");
+	        chatWindow.Test("Test 11");	        
+	        chatWindow.Test("Test 10");
+	        chatWindow.Test("Test 11");	        
+	        chatWindow.Test("Test 10");
+	        chatWindow.Test("Test 11");
 	        
 	        try {
 				while (SocketNotClosed) {
@@ -101,9 +112,9 @@ public class Client {
 							SocketNotClosed = false;
 							break;
 						}
-					} else if (NewMessage.getType().equals(new String("Chat"))) {
+					} else if (NewMessage.getType().equals(new String("conversation data"))) {
 						chatWindow.NewConversationMessage(NewMessage);
-					} else if (NewMessage.getType().equals(new String("IT Command Return Info"))) {
+					} else if (NewMessage.getType().equals(new String("IT command return info"))) {
 						itWindow.SetGuiText(NewMessage.getData());
 					}
 					
@@ -113,6 +124,8 @@ public class Client {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+	        
+	        
 	        
 		
 		} catch (UnknownHostException e) {

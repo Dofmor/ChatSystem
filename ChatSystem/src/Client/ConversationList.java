@@ -8,6 +8,7 @@ import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class ConversationList extends JPanel {
 	
 	private static Conversation CurrentConvo = null;
 
+	private static ObjectOutputStream objectOutput;
 	
 	private static int countButtons = 0;
 	private static JPanel centerPanel = new JPanel();
@@ -47,19 +49,20 @@ public class ConversationList extends JPanel {
 	private static TextField textField = new TextField();
 	private static TextField memberTextArea = new TextField();;
 	
-	public ConversationList(JFrame GuiFrame, JButton ChatSendButton, JButton AddUserSendButton) {	
+	public ConversationList(JFrame GuiFrame, JButton ChatSendButton, JButton AddUserSendButton, ObjectOutputStream objectOutput) {	
 		this.GuiFrame = GuiFrame;
 		this.ChatSendButton =  ChatSendButton;
 		this.AddUserSendButton =  AddUserSendButton;
-
+		this.objectOutput = objectOutput;
+		
 		
 	    GuiFrame.getContentPane().add(centerPanel, BorderLayout.CENTER);
 	    
 	    
-        this.setLayout(new BorderLayout(10, 10));
+        this.setLayout(new BorderLayout(10, 1));
         this.add(scrollPane);
 		buttonContainer.setLayout(new GridLayout(1000, 1));
-		
+
 		
 		//////////////////////////
 
@@ -84,15 +87,32 @@ public class ConversationList extends JPanel {
         setChatVisible(false);
 		
         GuiFrame.getContentPane().add(jp, BorderLayout.CENTER);
+		NewButton("lol");
+
+//		scrollPane.setPreferredSize(new Dimension(100,500));
 
 	}
 	
 	public static JButton NewButton(String str) {
+		System.out.println("new button with string:" + str);
 		countButtons = countButtons + 1;
         JButton myButton = new JButton(str);
-        myButton.setPreferredSize(new Dimension(200, 40));
-		buttonContainer.setLayout(new GridLayout(10, 1));
+        myButton.setPreferredSize(new Dimension(200, 1));
+		buttonContainer.setLayout(new GridLayout(countButtons*5, 1));
         buttonContainer.add(myButton);
+        myButton.requestFocusInWindow(); 
+
+//        myButton.setVisible(true);
+//        scrollPane.repaint();
+////		GuiFrame.pack();
+//        GuiFrame.setVisible(false);
+//        GuiFrame.setVisible(true);
+        
+
+//		GuiFrame.setSize(999,  699);
+//		GuiFrame.setSize(1000,  700);
+
+        
         return myButton;
 	}
 	
@@ -105,22 +125,22 @@ public class ConversationList extends JPanel {
 	}
 	
 	public static void UpdateOrCreateChat(Conversation newConvo) {
-		
-		
+		NewButton("FUCK YEAH!");
+
 		for (int i = 0; i < Conversations.size(); i++) {
 			if (Conversations.get(i).ID.equals(newConvo.ID) ) {
-            	UpdateChatText();
 				Conversations.get(i).ID = newConvo.ID;
 				Conversations.get(i).Name = newConvo.Name;
 				Conversations.get(i).Members = newConvo.Members;
 				Conversations.get(i).Chats = newConvo.Chats;
+				System.out.println("NOOOOOOOOOOOOOOOOOO");
 				return;
 			}
 		}
 		
 		JButton convoButton = NewButton(newConvo.Name);
 		Conversations.add(newConvo);
-				
+
 		convoButton.addActionListener((ActionListener) new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -129,6 +149,15 @@ public class ConversationList extends JPanel {
             	UpdateChatText();
             	System.out.println(CurrentConvo.ID);
                 setChatVisible(true);
+                
+                Message newMsg = new Message();
+    			newMsg.setType("refresh");
+				try {
+					objectOutput.writeObject(newMsg);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
             }
         });
 	}
@@ -151,12 +180,12 @@ public class ConversationList extends JPanel {
 	}
 	
 	public static void setChatVisible(Boolean bool) {
-        ScrollTextArea.setVisible(bool);
-        textField.setVisible(bool);
-        memberTextArea.setVisible(bool);
-        ChatSendButton.setVisible(bool);
-        AddUserSendButton.setVisible(bool);
-		memberTextArea.setVisible(bool);
+//        ScrollTextArea.setVisible(bool);
+//        textField.setVisible(bool);
+//        memberTextArea.setVisible(bool);
+//        ChatSendButton.setVisible(bool);
+//        AddUserSendButton.setVisible(bool);
+//		memberTextArea.setVisible(bool);
 	}
 	
 	public static String getTextForSending() {
