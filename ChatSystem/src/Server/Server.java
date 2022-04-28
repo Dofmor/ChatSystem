@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,20 +19,26 @@ public class Server {
 	private ArrayList<ServerThread> serverThreads = new ArrayList<>();
 	private ArrayList<Person> profiles = new ArrayList<>();
 	private ArrayList<Conversation> conversations = new ArrayList<>();
+	private HashMap<String,ServerThread> activeUsers = new HashMap<>();
 	private String profilesFile = "profiles.txt";
 	private String conversationsFile = "conversationFile";
-	private int chatId;
+	private int chatId = 0;
 
 	public Server(int port) {
 		this.port = port;
 		chatId = 0;
 	}
+	
+	public int getChatId() {
+		this.chatId++;
+		return chatId;
+	}
 
-	public ArrayList<Person> getUsers() {
+	public ArrayList<Person> getProfiles() {
 		return profiles;
 	}
 
-	public void setUsers(ArrayList<Person> users) {
+	public void setProfiles(ArrayList<Person> users) {
 		this.profiles = users;
 	}
 
@@ -49,6 +56,14 @@ public class Server {
 
 	public void setserverThreads(ArrayList<ServerThread> serverThreads) {
 		this.serverThreads = serverThreads;
+	}
+
+	public HashMap<String, ServerThread> getActiveUsers() {
+		return activeUsers;
+	}
+
+	public void setActiveUsers(HashMap<String, ServerThread> activeUsers) {
+		this.activeUsers = activeUsers;
 	}
 
 	/**
