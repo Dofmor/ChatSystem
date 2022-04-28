@@ -122,10 +122,11 @@ public class ServerThread implements Runnable {
 					
 					//Client is sending a text message
 					try {
-				    	List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
-				    	String ChatID = data.get(0);
-				    	String ChatMessage = data.get(1);
-			    	}catch(ArrayIndexOutOfBoundsException exception){}
+						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
+						String ChatID = data.get(0);
+						String ChatMessage = data.get(1);
+			    		}catch(ArrayIndexOutOfBoundsException exception){
+					}
 					continue;
 					
 				} else if (NewMessage.getType().equals(new String("new chat"))) {
@@ -134,51 +135,53 @@ public class ServerThread implements Runnable {
 					try {
 						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
 						String ChatName = data.get(0);
-				    	String Username = data.get(1);
-			    	}catch(ArrayIndexOutOfBoundsException exception){}
+				    		String Username = data.get(1);
+			    		}catch(ArrayIndexOutOfBoundsException exception){
+					}
 					continue;
 					
 				} else if (NewMessage.getType().equals(new String("new chat user"))) {
 					
 					//Client is asking you to add a person to the chat
-			    	try {
-			    		List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
-				    	String ChatID = data.get(0);
-				    	String Username = data.get(1);
-			    	}catch(ArrayIndexOutOfBoundsException exception){}
+			    		try {
+						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
+						String ChatID = data.get(0);
+						String Username = data.get(1);
+			    		}catch(ArrayIndexOutOfBoundsException exception){
+					}
 					continue;
 					
 				} else if (NewMessage.getType().equals(new String("refresh"))) {
 					
 					//Client asking to send each conversation they are in to them
 					// NO DATA
-			    	//List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
 					continue;
 					
 				} else if (NewMessage.getType().equals(new String("create user"))) {
 					
 					//IT creating new user
-			    	try {
-			    		List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
-				    	String Username = data.get(0);
-				    	String Password = data.get(1);
-				    	String UserType = data.get(2);
-			    	}catch(ArrayIndexOutOfBoundsException exception){}
+			    		try {
+						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
+						String Username = data.get(0);
+						String Password = data.get(1);
+						String UserType = data.get(2);
+			    		}catch(ArrayIndexOutOfBoundsException exception){
+					}
 					continue;
 					
 				} else if (NewMessage.getType().equals(new String("delete user"))) {
 					
 					//IT deleting user
-			    	try {
-			    		List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
-				    	String Username = data.get(0);
-			    	}catch(ArrayIndexOutOfBoundsException exception){}
+					try {
+						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
+						String Username = data.get(0);
+					}catch(ArrayIndexOutOfBoundsException exception){
+					}
 					continue;
 					
 				} else if (NewMessage.getType().equals(new String("get chat log"))) {
 					//IT requesting chat logs
 					// NO DATA
-			    	//List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
 					continue;
 				}
 				
