@@ -29,7 +29,7 @@ public class LoginWindow implements ClientUserInterface {
 		
 		
 		try {
-			objectOutput.writeObject(new Message("login", Username+'\n'+Password, "","","",""));
+			objectOutput.writeObject(new Message("login message", Username+'\n'+Password, "","","",""));
 			Message NewMessage = (Message) objectInput.readObject();
 			
 			if (NewMessage.getStatus().equals(new String("success"))) {
@@ -57,7 +57,19 @@ public class LoginWindow implements ClientUserInterface {
 			Object[] Message = {"Username:", Username,"Password:", Password};
 			int optionChoosen = JOptionPane.showConfirmDialog(null, Message, "Login", JOptionPane.OK_CANCEL_OPTION);
 			if (optionChoosen == JOptionPane.OK_OPTION) {
-				if (Login(Username.getText(), Password.getText()) == true) {
+				String Username1 = Username.getText();
+				String Password1 = Password.getText();
+				
+				if (true) {
+					if (Username1.equals(new String(""))) {
+						Username1 = " ";
+					}
+					if (Password1.equals(new String(""))) {
+						Password1 = " ";
+					}
+				}
+				
+				if (Login(Username1,Password1) == true) {
 					break;
 				}else {
 					

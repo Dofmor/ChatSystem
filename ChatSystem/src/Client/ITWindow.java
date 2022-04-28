@@ -128,7 +128,7 @@ public class ITWindow implements ClientUserInterface {
 		}
 
 		Message m = new Message();
-		m.setType("Create User");
+		m.setType("create user");
 		m.appendToData(userName);
 		m.appendToData(passWord);
 		m.appendToData(userType);
@@ -151,7 +151,7 @@ public class ITWindow implements ClientUserInterface {
 
 		
 		Message m = new Message();
-		m.setType("Delete User");
+		m.setType("delete user");
 		m.appendToData(userName);
 		
 		try {
@@ -169,7 +169,7 @@ public class ITWindow implements ClientUserInterface {
 //		frame.getContentPane();
 		
 		Message m = new Message();
-		m.setType("Get Chat Log");
+		m.setType("get chat log");
 		
 		try {
 			objectOutput.writeObject(m);
