@@ -103,4 +103,31 @@ public class Conversation {
 		return str;
 	}
 	
+	/**
+	 * Adds a new username to the conversation object
+	 * @param userName - username of client to be added to conversation
+	 */
+	public void addMember(String userName) {
+		Members.add(userName);
+	}
+	
+	/**
+	 * Returns true if username is found in conversation
+	 * @param userName - username to search
+	 * @return - true if username found
+	 */
+	public boolean isMember(String userName) {
+		return Members.contains(userName);
+	}
+	
+	
+	/**
+	 * Appends a chat to Chat arraylist
+	 * @param chat - new chat to be appeneded
+	 */
+	public void addChat(String[] chat) {
+		Chats.add(chat);
+	}
+	
+	
 }
