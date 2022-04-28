@@ -268,7 +268,7 @@ public class ChatWindow implements ClientUserInterface  {
                 Window.pack();
                 Window.setLocationRelativeTo(null);
                 Window.setVisible(true);
-                Window.setResizable(true);
+                Window.setResizable(false);
                 Window.setSize(900,  700);
                 Window.setLocation(100, 150);
                 Window.setDefaultLookAndFeelDecorated(true);
