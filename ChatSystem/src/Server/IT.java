@@ -49,10 +49,9 @@ public class IT extends Person{
 	 * This function is to delete a user based on the information given by it
 	 * then the user is removed from the array of users within the server if they exist
 	 */
-  void deleteUser(String username, String password, String userType){
-		Person userTemp = new Person(username, password, userType);
+  void deleteUser(String username){
 		for(int i = 0; i < profiles.size(); i++){
-			if(profiles[i].getUsername().equals(userTemp.getUsername())){
+			if(profiles[i].getUsername().equals(username)){
 				profiles.remove(i);
 			}
 		}
