@@ -3,19 +3,12 @@ package Server;
 import Shared.*;
 
 
-public class Log {
 import java.io.*;
 import java.util.*;
 
-public class log  {
+public class Log  {
 	private Message[] m;
 	private Message m1;
-
-
-
-
-
-
 	private Server s;
 	/** this is to call from message /
 	 * 
@@ -30,9 +23,8 @@ public class log  {
 	 * 
 	 * This is the user data
 	 */
-
+	private List<String> log;
 	
-	List<String> log;
 	public log(Message[] m, Message m1, Server s, String[] conversationData, String[] userData, List<String> log) {
 		super();
 		this.m = m;
@@ -81,6 +73,7 @@ public class log  {
 	
 
 
+	@SuppressWarnings("null")
 	void loadlog() {
 		 String line = "";
 
@@ -101,7 +94,6 @@ public class log  {
 		 if (found) {
 	           while (in.hasNext()) {
 	               line = in.nextLine();
-	               StringTokenizer st = new StringTokenizer(line, ",");
 	               addMessage();
 	         
 	           }
@@ -114,32 +106,27 @@ public class log  {
 		//format message
 		String formattedMsg = ""; //formatted message should be date, time, sender, receivers, message
 		Message m =new Message(formattedMsg, formattedMsg, formattedMsg, formattedMsg, formattedMsg, formattedMsg);
+		log= new ArrayList<String>();
 		log.add(formattedMsg);
 		m.getToServer();
 		} 
 	
 
 	void saveLog() {
-		String chatname = "";
 		String chat = new String();
-	    String throwable = "";
-
-
-				//write a new string
-				try {
-		    		if(chat.isBlank()) { 
-		    			  StringWriter sw = new StringWriter();
-		    		        PrintWriter pw = new PrintWriter(sw);
-		    		        pw.println();
-		    		        pw.close();
-		    		        throwable = sw.toString(); 
+	    //write a new string
+    		if(chat.isBlank()) { 
+    			  StringWriter sw = new StringWriter();
+    		        PrintWriter pw = new PrintWriter(sw);
+    		        pw.println();
+    		        pw.close(); 
+			}
+		
 					}
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-		} 
+			
 	
 	public void LogMessage() {
+		m1= new Message("", "", "", "", "", "");
 		m1.getFromServer();
 		m1.getFromClient();
 		loadlog();
@@ -149,27 +136,20 @@ public class log  {
 		}
 	
 	public void sendLogs() {
+		m1= new Message("", "", "", "", "", "");
+		s= new Server(0);
+		
 		LogMessage();
 		saveLog();
 		m1.getToServer();
+		s.getserverThreads();
 		
 		/**
 		 *  this is to send message logs to the server
 		 */
 		
 		
-	
-
-
-
-	
-
+	}
 
 
 	}
-	
-}
-
-	
-
-}
