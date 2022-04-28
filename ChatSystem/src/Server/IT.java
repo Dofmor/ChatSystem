@@ -2,18 +2,45 @@ package Server;
 
 //This class should extend server to be able to access logs and users
 public class IT extends Person{
-	
+	private String username;
+	private String password;
+	private String userType;
 	
 
 	public IT(String username, String password, String userType) {
-		super(username, password, userType);
-		// TODO Auto-generated constructor stub
+		this.username = username;
+		this.password = password;
+		this.userType = userType;
+	}
+	
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
 
 	//Calls the log function so we are able to read previous convo data
 	public String getChatLog() {
-		//gets the convo data so we are able to read the log
-		return getConversationData();
+		//gets the Log
+		return getLog();
 	}
 	
 
@@ -31,8 +58,9 @@ public class IT extends Person{
 	 */
   void createUser(String username, String password, String userType){
 		Person userTemp = new Person(username, password, userType);
-		profiles.add(userTemp);
-	  	saveProfiles(profiles);
+	  	ArrayList<Persons> profile = getProfiles();
+		profile.add(userTemp);
+	  	saveProfiles(profile);
 	}
 	
   
@@ -50,11 +78,12 @@ public class IT extends Person{
 	 * then the user is removed from the array of users within the server if they exist
 	 */
   void deleteUser(String username){
-		for(int i = 0; i < profiles.size(); i++){
-			if(profiles[i].getUsername().equals(username)){
-				profiles.remove(i);
+	  	ArrayList<Persons> profile = getProfiles();
+		for(int i = 0; i < profile.size(); i++){
+			if(profile[i].getUsername().equals(username)){
+				profile.remove(i);
 			}
 		}
-	  	saveProfiles(profiles);
+	  	saveProfiles(profile);
 	}
 }
