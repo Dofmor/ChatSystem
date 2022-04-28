@@ -13,7 +13,7 @@ public class IT extends Person{
 	//Calls the log function so we are able to read previous convo data
 	public String getChatLog() {
 		//gets the convo data so we are able to read the log
-		return log.getConversationData();
+		return getConversationData();
 	}
 	
 
