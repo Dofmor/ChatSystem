@@ -53,7 +53,7 @@ public class IT extends Person{
 		Person userTemp = new Person(username, password, userType);
 		for(int i = 0; i < profiles.size(); i++){
 			if(profile[i].getUsername().equals(userTemp.getUsername())){
-				profile[i] = null;
+				profiles.remove(i);
 			}
 		}
 	  	saveProfiles(profiles);
