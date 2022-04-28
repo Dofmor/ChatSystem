@@ -38,7 +38,7 @@ public class Client {
 	public static Boolean Login(String Username, String Password) throws ClassNotFoundException {
 		
 		try {
-			objectOutputStream.writeObject(new Message("login", Username+'\n'+Password, "","","",""));
+			objectOutputStream.writeObject(new Message("login message", Username+'\n'+Password, "","","",""));
 			Message NewMessage = (Message) objectInputStream.readObject();
 			PrintMessage(NewMessage);
 			
@@ -84,7 +84,7 @@ public class Client {
 	        	chatWindow = new ChatWindow(socket, objectOutputStream, objectInputStream,  this);
 				chatWindow.processCommands();
 	        }
-	        
+
 	        if (SocketNotClosed) {
 	        	itWindow = new ITWindow(socket, objectOutputStream, objectInputStream,  this);
 	        	itWindow.processCommands();
@@ -101,9 +101,9 @@ public class Client {
 							SocketNotClosed = false;
 							break;
 						}
-					} else if (NewMessage.getType().equals(new String("Chat"))) {
+					} else if (NewMessage.getType().equals(new String("conversation data"))) {
 						chatWindow.NewConversationMessage(NewMessage);
-					} else if (NewMessage.getType().equals(new String("IT Command Return Info"))) {
+					} else if (NewMessage.getType().equals(new String("IT command return info"))) {
 						itWindow.SetGuiText(NewMessage.getData());
 					}
 					
@@ -114,6 +114,8 @@ public class Client {
 				e.printStackTrace();
 			}
 	        
+	        
+	        
 		
 		} catch (UnknownHostException e) {
 			System.out.println("Could not get ip address");
@@ -123,72 +125,6 @@ public class Client {
 			return;
 		}
 		
-
-
-		
-		//
-//		// creating client socket
-//		int port = 7777;
-//		InetAddress serverIP;
-//		Socket socket;
-//		try {
-//			serverIP = InetAddress.getByName("127.0.0.1");
-//			socket = new Socket(serverIP, port);
-//
-//		} catch (UnknownHostException e) {
-//
-//			System.out.println("Could not get ip address");
-//			return;
-//		} catch (IOException e) {
-//
-//			System.out.println("Could not create socket");
-//			return;
-//		}
-//
-//		System.out.println("Test 1");
-//		// creating object streams
-//		OutputStream outputStream;
-//		ObjectOutputStream objectOutput;
-//		InputStream inputStream;
-//		ObjectInputStream objectInput;
-//
-//		System.out.println("Test 2");
-//		try {
-//			System.out.println("Test 3");
-//			outputStream = socket.getOutputStream();
-//			System.out.println("Test 4");
-//
-//			objectOutput = new ObjectOutputStream(outputStream);
-//			System.out.println("Test 5");
-//
-//			inputStream = socket.getInputStream();
-//			System.out.println("Test 6");
-//
-//			objectInput = new ObjectInputStream(inputStream);
-//			System.out.println("Test 7");
-//
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			System.out.println("could not create ObjectOutputStream");
-//
-//			return;
-//		}
-//		
-//		System.out.println("Test 3");
-//		
-//		LoginWindow loginWindow = new LoginWindow(socket, objectOutput, objectInput);
-//		loginWindow.processCommands();
-//		
-//		System.out.println("Test 4");
-//
-//		// closing client socket
-//		try {
-//			socket.close();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
 	}
 	
 

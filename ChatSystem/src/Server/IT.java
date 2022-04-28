@@ -31,9 +31,8 @@ public class IT extends Person{
 	 */
   void createUser(String name, String username, String password, String userType){
 		Person userTemp = new Person(username, password, userType);
-		
-		//ADD WAY TO ADD USER TO THE USERS ARRAY IN THE SERVER
-		//addUser(userTemp);
+		profiles.add(userTemp);
+	  	saveProfiles(profiles);
 	}
 	
   
@@ -52,8 +51,11 @@ public class IT extends Person{
 	 */
   void deleteUser(String name, String username, String password, String userType){
 		Person userTemp = new Person(username, password, userType);
-  
-		//ADD WAY TO Remove USER TO THE USERS ARRAY IN THE SERVER
-		//removeUser(userTemp);
+		for(int i = 0; i < profiles.size(); i++){
+			if(profile[i].getUsername().equals(userTemp.getUsername())){
+				profiles.remove(i);
+			}
+		}
+	  	saveProfiles(profiles);
 	}
 }

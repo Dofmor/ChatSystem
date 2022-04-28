@@ -8,6 +8,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.List;
 
 public class ServerThread implements Runnable {
 	private Boolean SocketOpen = true;
@@ -76,33 +78,33 @@ public class ServerThread implements Runnable {
 				login(NewMessage);
 			}
 			
-//			//For Testing
+////			//For Testing
 //			Message m = new Message();
-//			m.setType("Chat");
+//			m.setType("conversation data");
 //			m.appendToData("1234");	// Chat ID
 //			m.appendToData("Fake Chat 1");	// Chat Name
-//			m.appendToData("Harry, Daniel, Nick, Brian, Jacob"); // Members in chat
-//			m.appendToData("Harry, 532134, hello1");	// Chat Message
-//			m.appendToData("Harry, 532134, hello2");	// Chat Message
+//			m.appendToData("Harry,Daniel,Nick,Brian,Jacob"); // Members in chat
+//			m.appendToData("Harry,532134,hello1");	// Chat Message
+//			m.appendToData("Harry,532134,hello2");	// Chat Message
 //			objectOutputStream.writeObject(m);	// Send Message
 //
 //			Message m2 = new Message();
-//			m2.setType("Chat");
+//			m2.setType("conversation data");
 //			m2.appendToData("5324");	// Chat ID
 //			m2.appendToData("Fake Chat 2");	// Chat Name
-//			m2.appendToData("Harry, Daniel, Nick, Brian, Jacob"); // Members in chat
-//			m2.appendToData("Harry, 532134, asdfnfaidsnjaflds");	// Chat Message
+//			m2.appendToData("Harry,Daniel,Nick,Brian,Jacob"); // Members in chat
+//			m2.appendToData("Harry,532134,asdfnfaidsnjaflds");	// Chat Message
 //			objectOutputStream.writeObject(m2);	// Send Message
 //
 //			
 //			Message m3 = new Message();
-//			m3.setType("Chat");
+//			m3.setType("conversation data");
 //			m3.appendToData("1234");	// Chat ID
 //			m3.appendToData("Fake Chat 1");	// Chat Name
-//			m3.appendToData("Harry, Daniel, Nick, Brian, Jacob"); // Members in chat
-//			m3.appendToData("Harry, 532134, hello1");	// Chat Message
-//			m3.appendToData("Harry, 532134, hello2");	// Chat Message
-//			m3.appendToData("Jacob, 532134, hello");	// Chat Message
+//			m3.appendToData("Harry,Daniel,Nick,Brian,Jacob"); // Members in chat
+//			m3.appendToData("Harry,532134,hello1");	// Chat Message
+//			m3.appendToData("Harry,532134,hello2");	// Chat Message
+//			m3.appendToData("Jacob,532134,hello");	// Chat Message
 //			objectOutputStream.writeObject(m3);	// Send Message
 			
 			
@@ -117,7 +119,66 @@ public class ServerThread implements Runnable {
 					SocketOpen = false;
 					break;
 				} else if (NewMessage.getType().equals(new String("text message"))) {
-					objectOutputStream.writeObject(NewMessage);
+					
+					//Client is sending a text message
+					try {
+				    	List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
+				    	String ChatID = data.get(0);
+				    	String ChatMessage = data.get(1);
+			    	}catch(ArrayIndexOutOfBoundsException exception){}
+					continue;
+					
+				} else if (NewMessage.getType().equals(new String("new chat"))) {
+					
+					//Client is wanting to make a new chat
+					try {
+						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
+						String ChatName = data.get(0);
+				    	String Username = data.get(1);
+			    	}catch(ArrayIndexOutOfBoundsException exception){}
+					continue;
+					
+				} else if (NewMessage.getType().equals(new String("new chat user"))) {
+					
+					//Client is asking you to add a person to the chat
+			    	try {
+			    		List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
+				    	String ChatID = data.get(0);
+				    	String Username = data.get(1);
+			    	}catch(ArrayIndexOutOfBoundsException exception){}
+					continue;
+					
+				} else if (NewMessage.getType().equals(new String("refresh"))) {
+					
+					//Client asking to send each conversation they are in to them
+					// NO DATA
+			    	//List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
+					continue;
+					
+				} else if (NewMessage.getType().equals(new String("create user"))) {
+					
+					//IT creating new user
+			    	try {
+			    		List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
+				    	String Username = data.get(0);
+				    	String Password = data.get(1);
+				    	String UserType = data.get(2);
+			    	}catch(ArrayIndexOutOfBoundsException exception){}
+					continue;
+					
+				} else if (NewMessage.getType().equals(new String("delete user"))) {
+					
+					//IT deleting user
+			    	try {
+			    		List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
+				    	String Username = data.get(0);
+			    	}catch(ArrayIndexOutOfBoundsException exception){}
+					continue;
+					
+				} else if (NewMessage.getType().equals(new String("get chat log"))) {
+					//IT requesting chat logs
+					// NO DATA
+			    	//List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
 					continue;
 				}
 				
@@ -157,7 +218,7 @@ public class ServerThread implements Runnable {
 	
 	private void login(Message m) {
 		// validate that login() is being used correctly
-		if(m.getType().equals("login") == false) return; 
+		if(m.getType().equals("login message") == false) return; 
 		String[] parts = m.getData().split("\n");
 		if(parts.length < 2) return;
 		String username = parts[0];
