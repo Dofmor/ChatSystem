@@ -120,23 +120,13 @@ public class log  {
 	
 
 	void saveLog() {
-		String chatname = "";
-		String chat = new String();
-	    String throwable = "";
-
-
-				//write a new string
-				try {
-		    		if(chat.isBlank()) { 
-		    			  StringWriter sw = new StringWriter();
-		    		        PrintWriter pw = new PrintWriter(sw);
-		    		        pw.println();
-		    		        pw.close();
-		    		        throwable = sw.toString(); 
-					}
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+	String chat = new String();
+	    //write a new string
+    		if(chat.isBlank()) { 
+    			  StringWriter sw = new StringWriter();
+    		        PrintWriter pw = new PrintWriter(sw);
+    		        pw.println();
+    		        pw.close(); 
 		} 
 	
 	public void LogMessage() {
