@@ -112,6 +112,9 @@ public class ServerThread implements Runnable {
 			//Wait for other client messages after a good login
 			while (SocketOpen) {
 				Message NewMessage = (Message) objectInputStream.readObject();
+				
+				//sendToOther(NewMessage);
+				
 				PrintMessage(NewMessage);
 				if (NewMessage.getType().equals(new String("logout message"))) {
 					NewMessage.setStatus("success");
@@ -134,8 +137,12 @@ public class ServerThread implements Runnable {
 					//Client is wanting to make a new chat
 					try {
 						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
-						String ChatName = data.get(0);
+							String ChatName = data.get(0);
 				    		String Username = data.get(1);
+//				    		String msgData = server.getChatId() + "\n" + ChatName + "\n" + this.person.getUsername() + ", " + Username;
+//				    		NewMessage.setData(msgData);
+//				    		NewMessage.setType("conversation data");
+//				    		send(NewMessage);
 			    		}catch(ArrayIndexOutOfBoundsException exception){
 					}
 					continue;
@@ -227,7 +234,7 @@ public class ServerThread implements Runnable {
 		String username = parts[0];
 		String password = parts[1];
 		if (person == null || person.isLoggedIn() != false) {
-			for (Person user : server.getUsers()) {
+			for (Person user : server.getProfiles()) {
 				// check to see if login information matches any user currently registered.
 				if (user.login(username, password) == true) {
 					// assign this thread to be associated with a user if login information is
@@ -239,6 +246,7 @@ public class ServerThread implements Runnable {
 						m.setData(user.getUserType());
 						objectOutputStream.writeObject(m);
 						System.out.println("{ \nUser : " + username + "\nPassword : " + password +  "\nlogged in successfully\n}");
+						server.getActiveUsers().put(username, this);	
 						return;
 					} catch (IOException e) {
 			
@@ -256,5 +264,51 @@ public class ServerThread implements Runnable {
 			}
 		}
 	}
+	
+	private void sendToOther(Message m) {
+		//this function takes the message in the current thread, and finds the correct
+		//user or thread to send it to .
+		
+		//Data: "Chat-ID
+//		Chat-Name
+//		Username, Username, Username, ...
+//		Username, Date, Text
+//		Username, Date, Text
+//		Username, Date, Text"
+		PrintMessage(m);
+		//parse message data by newline
+		List<String> dataList = Arrays.asList(m.getData().split("\n"));
+		// get users from message
+		List<String> members = null;
+		if(dataList.size() >= 2) {
+			members = Arrays.asList(dataList.get(1).split(", ")); 
+		}
+		//send a message to each active user
+		for(String member: members) {
+			ServerThread memberThread = server.getActiveUsers().get(member);
+			if(memberThread != null) {
+				memberThread.send(m);
+			} else {
+				System.out.println(member + " is not logged in");
+			}
+		}
+		
+	}
+	
+
+
+	private void send(Message m) {
+		if(this.person == null || this.person.isLoggedIn() == false) return;
+		try {
+			objectOutputStream.writeObject(m);
+			System.out.println("Message sent to " + this.person.getUsername());
+			PrintMessage(m);
+		} catch (IOException e) {
+			
+		}
+	}
+	
+	
+	
 
 }
