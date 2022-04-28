@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import Shared.Conversation;
 import Shared.Message;
 
 public class ConversationList extends JPanel {
@@ -98,41 +99,38 @@ public class ConversationList extends JPanel {
 	public static void UpdateChatText() {
 		
 		if (CurrentConvo != null) {
-			TextArea.setText(CurrentConvo.dataToText());
+			TextArea.setText(CurrentConvo.chatsToText());
 			memberTextArea.setText(CurrentConvo.membersToText());
 		}
 	}
 	
-	public static void UpdateOrCreateChat(String name,String id, List<String> members, ArrayList<String[]> chats) {
+	public static void UpdateOrCreateChat(Conversation newConvo) {
 		
 		
 		for (int i = 0; i < Conversations.size(); i++) {
-			if (Conversations.get(i).ID.equals(id) ) {
+			if (Conversations.get(i).ID.equals(newConvo.ID) ) {
             	UpdateChatText();
-				Conversations.get(i).ID = id;
-				Conversations.get(i).Name = name;
-				Conversations.get(i).Members = members;
-				Conversations.get(i).Chats = chats;
+				Conversations.get(i).ID = newConvo.ID;
+				Conversations.get(i).Name = newConvo.Name;
+				Conversations.get(i).Members = newConvo.Members;
+				Conversations.get(i).Chats = newConvo.Chats;
 				return;
 			}
 		}
-		JButton convoButton = NewButton(name);
-		Conversation convo = new Conversation(name,id,members,chats);
-		Conversations.add(convo);
+		
+		JButton convoButton = NewButton(newConvo.Name);
+		Conversations.add(newConvo);
 				
 		convoButton.addActionListener((ActionListener) new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	ChatOpened = true;
-            	CurrentConvo = convo;
+            	CurrentConvo = newConvo;
             	UpdateChatText();
             	System.out.println(CurrentConvo.ID);
                 setChatVisible(true);
             }
         });
-		
-
-        
 	}
 	public static Boolean isChatOpened() {
 		return ChatOpened;
