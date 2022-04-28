@@ -8,25 +8,13 @@ import org.junit.Test;
 import org.junit.jupiter.api.RepeatedTest;
 
 public class ITtest {
-//	@Test
-//	public void testAvgRoll() {
-//		int sides = 17;
-//		Die die1 = new Die(sides);
-//		int total = 0;
-//		for (int i=0;i<500;i++) {
-//			total += die1.roll();
-//		}
-//		int average = total/500;
-//		
-//		System.out.println("Average: " + average);
-//		
-//		assertTrue(average > (sides/2)-1 && average < (sides/2)+1);
-//	}
+	//Test to see if something is returned when the get convo data is called to retrieve log
 	@Test
 	public void getChatLogTest() {
 		assertNotNull(getConversationData());
 	}
 	
+	//Test to create user and check if the user is in the profiles
 	@Test
 	public void createUserTest() {
 		boolean isInProfiles = false;
@@ -37,8 +25,10 @@ public class ITtest {
 			}
 		}
 		assertTrue(isInProfiles);
+		deleteUser("jacobTest");
 	}
 	
+	//Test to create user and delete user then check if the user is in the profile
 	@Test
 	public void deleteUserTest() {
 		boolean isInProfiles = false;
