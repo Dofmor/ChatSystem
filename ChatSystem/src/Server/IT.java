@@ -52,7 +52,7 @@ public class IT extends Person{
   void deleteUser(String name, String username, String password, String userType){
 		Person userTemp = new Person(username, password, userType);
 		for(int i = 0; i < profiles.size(); i++){
-			if(profile[i].username.equals(userTemp.username)){
+			if(profile[i].getUsername().equals(userTemp.getUsername())){
 				profile[i] = null;
 			}
 		}
