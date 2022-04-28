@@ -12,6 +12,30 @@ public class IT extends Person{
 		this.password = password;
 		this.userType = userType;
 	}
+	
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
 
 	//Calls the log function so we are able to read previous convo data
 	public String getChatLog() {
