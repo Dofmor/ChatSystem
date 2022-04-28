@@ -56,5 +56,6 @@ public class IT extends Person{
 				profile[i] = null;
 			}
 		}
+	  	saveProfiles(profiles);
 	}
 }
