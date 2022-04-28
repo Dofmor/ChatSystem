@@ -57,5 +57,10 @@ public class Person {
 		setLoggedIn(false);
 	}
 	
+	public String toString() {
+		String formatted = getUsername() + " " + getPassword() + " " + getUserType() +"\n";
+		return formatted;
+		
+	}
 
 }
