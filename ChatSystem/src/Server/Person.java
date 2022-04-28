@@ -58,7 +58,7 @@ public class Person {
 	}
 	
 	public String toString() {
-		String formatted = getUsername() + " " + getPassword() + " " + getUserType() +"\n";
+		String formatted = getUsername() + " " + getPassword() + " " + getUserType() + "\n";
 		return formatted;
 		
 	}

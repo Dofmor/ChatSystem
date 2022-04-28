@@ -5,6 +5,7 @@ import Shared.Conversation;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class Server {
 	
 	private int port;
 	private ArrayList<ServerThread> serverThreads = new ArrayList<>();
-	private ArrayList<Person> users = new ArrayList<>();
+	private ArrayList<Person> profiles = new ArrayList<>();
 	private ArrayList<Conversation> conversations = new ArrayList<>();
 	private String profilesFile = "profiles.txt";
 	private String conversationsFile =  "conversationFile";
@@ -24,11 +25,11 @@ public class Server {
 	}
 
 	public ArrayList<Person> getUsers() {
-		return users;
+		return profiles;
 	}
 
 	public void setUsers(ArrayList<Person> users) {
-		this.users = users;
+		this.profiles = users;
 	}
 
 	public int getPort() {
@@ -53,35 +54,57 @@ public class Server {
 	 */
 	public void readProfiles() throws FileNotFoundException {
 		File file = new File(profilesFile);
+		Scanner read = null;
 		
 		if (!file.exists()) {
 			System.out.println("File not found");
 		}
 		else {
-			String userName = "", password = "", profileType = "";
-			Scanner read = new Scanner(file);
+			System.out.println("File found");
+			String userName, password, profileType;
+			read = new Scanner(file);
 			Person personProfile = null;
 			IT ITProfile = null;
-
+			System.out.println(profiles.size());
 			while (read.hasNext()) {
 				userName = read.next();
 				password = read.next();
-				profileType = read.nextLine();
+				profileType = read.next();
+				profileType = profileType.trim();
 				
 				
-				if(profileType.equalsIgnoreCase("IT")) {
+				if(profileType.equals("IT")) {
 					ITProfile = new IT(userName, password, profileType);
-					users.add(ITProfile);
+					profiles.add(ITProfile);
 				}
-				else
+				else {
 					personProfile = new Person(userName, password, profileType);
-					users.add(personProfile);
+					profiles.add(personProfile);
+				}
 			}
 			
 			
-			
+			read.close();
 		}
 		
+	}
+	
+	/**
+	 * saves profiles into text file
+	 * @param profiles - profiles to be saved
+	 * @throws FileNotFoundException - if file not found
+	 */
+	public  void saveProfiles(ArrayList<Person> profiles ) throws FileNotFoundException {
+		File file = new File(profilesFile);
+		
+		PrintWriter write = new PrintWriter(file);
+		
+		for (int i = 0; i < profiles.size(); i++) {
+			write.print(profiles.get(i).toString());
+			//System.out.print(profiles.get(i).toString());
+		}
+
+		write.close();
 	}
 	
 	public void run() {
@@ -90,9 +113,9 @@ public class Server {
 		ServerSocket server;
 		
 		//FAKE USERS FOR TESTING
-		users.add(new Person("user1","pass1","it"));
-		users.add(new Person("user2","pass2","regular"));
-		users.add(new Person("","","testuser"));
+		profiles.add(new Person("user1","pass1","it"));
+		profiles.add(new Person("user2","pass2","regular"));
+		profiles.add(new Person("","","testuser"));
 
 		try {
 
