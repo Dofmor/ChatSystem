@@ -43,6 +43,7 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 import Server.ServerThread;
+import Shared.Conversation;
 import Shared.Message;
 
 public class ChatWindow implements ClientUserInterface {
@@ -200,35 +201,9 @@ public class ChatWindow implements ClientUserInterface {
 	
 	public void NewConversationMessage(Message Message) {
 		
-		String Chat_ID = "";
-		String Chat_Name = "";
-		List<String> Members = null;		
-		ArrayList<String[]> Chats = new ArrayList<String[]>();
-		
-		
-		List<String> DataList = Arrays.asList(Message.getData().split("\n"));
-		for (int i = 0; i < DataList.size(); i++) {
-			
-			switch(i) {
-
-				case 0: Chat_ID = DataList.get(i);
-						break;
-				case 1: Chat_Name = DataList.get(i);
-						break;
-				case 2: 
-						Members = Arrays.asList( DataList.get(i).split(", "));	
-						break;
-			    default :
-			    	List<String> tempList = Arrays.asList(DataList.get(i).split(", "));
-			    	String[] Array  = new String[tempList.size()];
-			    	for (int j = 0; j < tempList.size(); j++) {
-			    		Array[j] = tempList.get(j);
-			    	}
-			    	Chats.add(Array);
-			}
-		}
+		Conversation newConvo = new Conversation(Message.getData());
 				
-		((ConversationList) ConversationList).UpdateOrCreateChat(Chat_Name,Chat_ID,Members,Chats);
+		((ConversationList) ConversationList).UpdateOrCreateChat(newConvo);
 
 		//Print All Variables
 //		System.out.println("\"" + Chat_ID + "\"");
