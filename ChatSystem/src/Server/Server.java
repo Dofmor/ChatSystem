@@ -21,7 +21,7 @@ public class Server {
 	private ArrayList<Conversation> conversations = new ArrayList<>();
 	private HashMap<String,ServerThread> activeUsers = new HashMap<>();
 	private String profilesFile = "profiles.txt";
-	private String conversationsFile = "conversationFile";
+	private String conversationsFile = "conversations.txt";
 	private int chatId = 0;
 
 	public Server(int port) {
@@ -110,7 +110,7 @@ public class Server {
 	 * @param profiles - profiles to be saved
 	 * @throws FileNotFoundException - if file not found
 	 */
-	public void saveProfiles(ArrayList<Person> profiles) throws FileNotFoundException {
+	public void saveProfiles() throws FileNotFoundException {
 		File file = new File(profilesFile);
 
 		PrintWriter write = new PrintWriter(file);
@@ -128,7 +128,7 @@ public class Server {
 	 * @param conversations - arraylist where conversations will be stored
 	 * @throws FileNotFoundException - if file not found
 	 */
-	public void readConversations(ArrayList<Conversation> conversations) throws FileNotFoundException {
+	public void readConversations() throws FileNotFoundException {
 
 		File file = new File(conversationsFile);
 		Scanner read = null;
@@ -144,13 +144,13 @@ public class Server {
 			while (read.hasNextLine()) {
 				chat = new ArrayList<>();
 				chatName = read.nextLine();
-				System.out.println("chatName: " + chatName);
+				//System.out.println("chatName: " + chatName);
 
 				chatId = read.nextLine();
-				System.out.println("chatid: " + chatId);
+				//System.out.println("chatid: " + chatId);
 
 				member = read.nextLine();
-				System.out.println("member: " + member);
+				//System.out.println("member: " + member);
 
 				// reading users
 				sc = new Scanner(member);
@@ -158,7 +158,7 @@ public class Server {
 				while (sc.hasNext()) {
 					userName = sc.next();
 					members.add(userName);
-					System.out.println(userName);
+				//	System.out.println(userName);
 				}
 
 				// reading messages
@@ -171,16 +171,16 @@ public class Server {
 					data = new String[3];
 					userName = sc.next();
 					data[0] = userName;
-					System.out.println("usernames: " + userName);
+				//	System.out.println("usernames: " + userName);
 
 					date = sc.next();
 					data[1] = date;
-					System.out.println("date: " + date);
+				//	System.out.println("date: " + date);
 
 					str = sc.nextLine();
 					str = str.trim();
 					data[2] = str;
-					System.out.println("data: " + str);
+				//	System.out.println("data: " + str);
 
 					chat.add(data);
 
@@ -188,22 +188,16 @@ public class Server {
 				}
 
 				for (int i = 0; i < chat.size(); i++) {
-					System.out.println(chat.size());
+				//	System.out.println(chat.size());
 					for (int j = 0; j < 3; j++) {
-						System.out.print(chat.get(i)[j] + " ");
+						//System.out.print(chat.get(i)[j] + " ");
 					}
-					System.out.print("\n");
+				//	System.out.print("\n");
 
 				}
 
 				temp = new Conversation(chatName, chatId, members, chat);
 				conversations.add(temp);
-
-				for (int i = 0; i < conversations.size(); i++) {
-					System.out.print("\n>>>>***************************************************");
-					System.out.println(conversations.get(i).toString());
-					System.out.print("\n<<<<***************************************************");
-				}
 
 			}
 
@@ -212,6 +206,22 @@ public class Server {
 		read.close();
 
 	}
+	
+	/**
+	 * Writes all conversations from conversations arraylist onto conversatoinsFile 
+	 * @throws FileNotFoundException - if file is not found
+	 */
+	public void saveConversations() throws FileNotFoundException {
+		File file = new File(conversationsFile);
+		PrintWriter write = new PrintWriter(file);
+
+		for (int i = 0; i < conversations.size(); i++) {
+			write.print(conversations.get(i).toString());
+		}
+
+		write.close();
+		
+	}
 
 	public void run() {
 		// TODO Auto-generated method stub
@@ -219,9 +229,16 @@ public class Server {
 		ServerSocket server;
 		try {
 			readProfiles();
+			readConversations();
+			
+		
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			System.out.println("File not found");
+		}
+		
+		for(int i = 0; i < conversations.size(); i++) {
+			System.out.print(conversations.get(i).toString());
 		}
 
 		// FAKE USERS FOR TESTING

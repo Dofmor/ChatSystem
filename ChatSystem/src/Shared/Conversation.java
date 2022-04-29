@@ -62,17 +62,18 @@ public class Conversation {
 	
 	public String toString() {
 		String str = "";
-		str = str + ID + "\n";
 		str = str + Name + "\n";
+		str = str + ID + "\n";
 		for (int i = 0; i < Members.size(); i++) {
 			str = str + Members.get(i);
 			if (Members.size()-1 != i) {
-				str = str + ",";
+				str = str + " ";
 			}
 		}	str = str + "\n";
 		for (int i = 0; i < Chats.size(); i++) {
-			str = str + Chats.get(i)[0] + "," +  Chats.get(i)[1] + "," +  Chats.get(i)[2]  + "\n";
+			str = str + Chats.get(i)[0] + " " +  Chats.get(i)[1] + " " +  Chats.get(i)[2]  + "\n";
 		}
+		str = str + "END\n";
 		return str;
 	}
 	
