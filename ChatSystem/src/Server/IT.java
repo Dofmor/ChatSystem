@@ -2,15 +2,9 @@ package Server;
 
 //This class should extend server to be able to access logs and users
 public class IT extends Person{
-	private String username;
-	private String password;
-	private String userType;
-	
 
 	public IT(String username, String password, String userType) {
-		this.username = username;
-		this.password = password;
-		this.userType = userType;
+		super(username,password,userType);
 	}
 	
 	public String getUsername() {

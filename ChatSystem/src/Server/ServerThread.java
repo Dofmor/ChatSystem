@@ -140,10 +140,10 @@ public class ServerThread implements Runnable {
 						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
 							String ChatName = data.get(0);
 				    		String Username = data.get(1);
-//				    		String msgData = server.getChatId() + "\n" + ChatName + "\n" + this.person.getUsername() + ", " + Username;
-//				    		NewMessage.setData(msgData);
-//				    		NewMessage.setType("conversation data");
-//				    		send(NewMessage);
+				    		String msgData = server.getChatId() + "\n" + ChatName + "\n" + this.person.getUsername() + "," + Username;
+				    		NewMessage.setData(msgData);
+				    		NewMessage.setType("conversation data");
+				    		send(NewMessage);
 			    		}catch(ArrayIndexOutOfBoundsException exception){
 					}
 					continue;
