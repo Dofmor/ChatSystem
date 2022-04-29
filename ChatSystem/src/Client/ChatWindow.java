@@ -204,6 +204,8 @@ public class ChatWindow implements ClientUserInterface  {
             JButton button = new JButton(str );
             chatList.add(button);
             button.setPreferredSize(new Dimension(0, 20));
+            Window.setSize(899,  699);
+            Window.setSize(900,  700);
             return button;
     	}
     	
