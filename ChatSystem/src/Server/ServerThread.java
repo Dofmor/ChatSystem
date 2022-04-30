@@ -132,99 +132,16 @@ public class ServerThread implements Runnable {
 
 				case "get chat log":
 					// IT requesting chat logs
-					// NO DATA
+					getLog(NewMessage);
 					break;
 				default:
 					// failed to handle message
 					// sending failed message back to client
 					NewMessage.setStatus("fail");
-					objectOutputStream.writeObject(NewMessage);
+					send(NewMessage);
 					break;
 				}
 
-//				PrintMessage(NewMessage);
-//				if (NewMessage.getType().equals(new String("logout message"))) {
-//					NewMessage.setStatus("success");
-//					objectOutputStream.writeObject(NewMessage);
-//					SocketOpen = false;
-//					break;
-//				} else if (NewMessage.getType().equals(new String("text message"))) {
-//					
-//					//Client is sending a text message
-//					try {
-//						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
-//						String ChatID = data.get(0);
-//						String ChatMessage = data.get(1);
-//			    		}catch(ArrayIndexOutOfBoundsException exception){
-//					}
-//					continue;
-//					
-//				} else if (NewMessage.getType().equals(new String("new chat"))) {
-//					
-//					//Client is wanting to make a new chat
-//					try {
-//						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
-//							String ChatName = data.get(0);
-//				    		String Username = data.get(1);
-//				    		String msgData = server.getChatId() + "\n" + ChatName + "\n" + this.person.getUsername() + "," + Username;
-//				    		NewMessage.setData(msgData);
-//				    		NewMessage.setType("conversation data");
-//				    		send(NewMessage);
-//			    		}catch(ArrayIndexOutOfBoundsException exception){
-//					}
-//					continue;
-//					
-//				} else if (NewMessage.getType().equals(new String("new chat user"))) {
-//					
-//					//Client is asking you to add a person to the chat
-//			    		try {
-//						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
-//						String ChatID = data.get(0);
-//						String Username = data.get(1);
-//			    		}catch(ArrayIndexOutOfBoundsException exception){
-//					}
-//					continue;
-//					
-//				} else if (NewMessage.getType().equals(new String("refresh"))) {
-//					
-//					//Client asking to send each conversation they are in to them
-//					// NO DATA
-//					continue;
-//					
-//				} else if (NewMessage.getType().equals(new String("create user"))) {
-//					
-//					//IT creating new user
-//			    		try {
-//						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
-//						String Username = data.get(0);
-//						String Password = data.get(1);
-//						String UserType = data.get(2);
-//						createUser(NewMessage);
-//			    		}catch(ArrayIndexOutOfBoundsException exception){
-//					}
-//					continue;
-//					
-//				} else if (NewMessage.getType().equals(new String("delete user"))) {
-//					
-//					//IT deleting user
-//					try {
-//						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
-//						String Username = data.get(0);
-//						deleteUser(NewMessage);
-//					}catch(ArrayIndexOutOfBoundsException exception){
-//					}
-//					continue;
-//					
-//				} else if (NewMessage.getType().equals(new String("get chat log"))) {
-//					//IT requesting chat logs
-//					// NO DATA
-//					continue;
-//				}
-
-				// failed to handle message
-				// sending failed message back to client
-//				NewMessage.setStatus("fail");
-//				objectOutputStream.writeObject(NewMessage);
 			}
 
 		} catch (IOException e) {
@@ -279,10 +196,10 @@ public class ServerThread implements Runnable {
 						System.out.println(
 								"{ \nUser : " + username + "\nPassword : " + password + "\nlogged in successfully\n}");
 						server.getActiveUsers().put(username, this);
-											
-						//send all the users conversations back to client
+
+						// send all the users conversations back to client
 						refresh();
-						
+
 						return;
 					} catch (IOException e) {
 
@@ -312,7 +229,7 @@ public class ServerThread implements Runnable {
 		List<String> members = null;
 		try {
 			members = Arrays.asList(data.get(2).split(" "));
-		} catch(ArrayIndexOutOfBoundsException e) {
+		} catch (ArrayIndexOutOfBoundsException e) {
 			e.printStackTrace();
 		}
 		// send a message to each active user
@@ -417,96 +334,104 @@ public class ServerThread implements Runnable {
 				|| m.getType().equals("get chat log") == false) {
 			return;
 		}
-
-		// call server.log.getChatLog();
-		// send chatlog as message back to server
+		
+		String log = "";
+		
+		for (Conversation c : server.getConversations()) {
+			log += c.toString();
+		}
+		m.setType("IT command return Info");
+		m.setData(log);
+		send(m);
+		
+		
+		
 	}
-	
+
 	private void newChat(Message m) {
 		List<String> data = Arrays.asList(m.getData().split("\n"));
 		try {
-			//get data variables for new conversation
+			// get data variables for new conversation
 			String chatName = data.get(0);
 			String username = data.get(1);
 			List<String> users = new ArrayList<>();
 			users.add(this.person.getUsername());
 			users.add(username);
-			ArrayList<String[]> chat =  new ArrayList<String[]>();
-			chat.add(new String[] {"", "", ""});
+			ArrayList<String[]> chat = new ArrayList<String[]>();
+			chat.add(new String[] { "", "", "" });
 			String id = "" + (server.getConversations().size() + 1);
-			Conversation newConvo = new Conversation(chatName,id,users,chat);
-			
-			//add the new conversation to the conversation list
+			Conversation newConvo = new Conversation(chatName, id, users, chat);
+
+			// add the new conversation to the conversation list
 			server.addConversation(newConvo);
-			
-			//send the message back to server
+
+			// send the message back to server
 			send(newConvo.convertToMessage());
-			
-		} catch(ArrayIndexOutOfBoundsException e) {
+
+		} catch (ArrayIndexOutOfBoundsException e) {
 			e.printStackTrace();
 		}
-	
+
 	}
-	
+
 	private void textMessage(Message m) {
 		try {
 			List<String> data = Arrays.asList(m.getData().split("\n"));
 			String chatID = data.get(0);
 			String chatMessage = data.get(1);
-			String[] chat = new String[] {this.person.getUsername(),m.getDate(),chatMessage};
-			//find the conversation to load the text message in
-			for(Conversation c: server.getConversations()) {
-				if(c.ID.equals(chatID)) {
+			String[] chat = new String[] { this.person.getUsername(), m.getDate(), chatMessage };
+			// find the conversation to load the text message in
+			for (Conversation c : server.getConversations()) {
+				if (c.ID.equals(chatID)) {
 					c.addChat(chat);
 					try {
-						//save conversation to file
+						// save conversation to file
 						server.saveConversations();
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
 					}
-					
-					//send the message to all other users
-					 sendToOther(c.convertToMessage());
+
+					// send the message to all other users
+					sendToOther(c.convertToMessage());
 					break;
 				}
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {
 			e.printStackTrace();
 		}
-		
-		
+
 	}
-	
+
 	private void refresh() {
-		//send all the users conversations back to client
-		for(Conversation c: server.getConversations()) {
-			if(c.isMember(this.person.getUsername())) {
+		// send all the users conversations back to client
+		for (Conversation c : server.getConversations()) {
+			if (c.isMember(this.person.getUsername())) {
 				Message conversationMsg = c.convertToMessage();
 				send(conversationMsg);
 			}
 		}
-		
+
 	}
-	
+
 	private void newChatUser(Message m) {
 		try {
 			List<String> data = Arrays.asList(m.getData().split("\n"));
 			String chatID = data.get(0);
 			String username = data.get(1);
-			
-			for(Conversation c: server.getConversations()) {
-				//find the correct conversation
-				if(c.ID.equals(chatID)) {
-					//If the correct conversation is found add the user to that conversation
+
+			for (Conversation c : server.getConversations()) {
+				// find the correct conversation
+				if (c.ID.equals(chatID)) {
+					// If the correct conversation is found add the user to that conversation
 					c.addMember(username);
-					//save the current state of conversations to a file
+					// save the current state of conversations to a file
 					try {
 						server.saveConversations();
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
 					}
-					
-					//send the conversation to all members
+
+					// send the conversation to all members
 					Message conversationMsg = c.convertToMessage();
 					sendToOther(conversationMsg);
 					break;
@@ -516,12 +441,11 @@ public class ServerThread implements Runnable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void logout(Message m) {
 		m.setStatus("success");
 		send(m);
 		SocketOpen = false;
 	}
-	
 
 }
