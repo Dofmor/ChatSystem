@@ -2,8 +2,8 @@ package Shared;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
-import javax.swing.JPanel;
 
 
 public class Conversation {
@@ -23,6 +23,9 @@ public class Conversation {
 	
 	public Conversation(String data){	
 		Chats = new ArrayList<String[]>();
+		String temp, username, time, message;
+		String[] Array;
+	
 		
 		List<String> DataList = Arrays.asList(data.split("\n"));
 		for (int i = 0; i < DataList.size(); i++) {
@@ -34,15 +37,29 @@ public class Conversation {
 				case 1: Name = DataList.get(i);
 						break;
 				case 2: 
-						Members = Arrays.asList( DataList.get(i).split(","));	
+						Members = Arrays.asList( DataList.get(i).split(" "));	
 						break;
 			    default :
-			    	List<String> tempList = Arrays.asList(DataList.get(i).split(","));
-			    	String[] Array  = new String[tempList.size()];
-			    	for (int j = 0; j < tempList.size(); j++) {
-			    		Array[j] = tempList.get(j);
-			    	}
+//			    	List<String> tempList = Arrays.asList(DataList.get(i).split(","));
+//			    	String[] Array  = new String[tempList.size()];
+//			    	for (int j = 0; j < tempList.size(); j++) {
+//			    		Array[j] = tempList.get(j);
+//			    	}
+//			    	Chats.add(Array);
+			    	
+			    	Array = new String[3];
+			    	temp = DataList.get(i);
+			    	Scanner sc = new Scanner(temp);
+			    	username = sc.next();
+			    	time = sc.next();
+			    	message = sc.nextLine();
+			    	
+			    	Array[0] = username;
+			    	Array[1] = time;
+			    	Array[2] = message;
 			    	Chats.add(Array);
+			    	
+			    	
 			}
 		}
 		
