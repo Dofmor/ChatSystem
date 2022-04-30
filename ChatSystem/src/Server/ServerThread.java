@@ -97,9 +97,7 @@ public class ServerThread implements Runnable {
 
 				switch (NewMessage.getType()) {
 				case "logout message":
-					NewMessage.setStatus("success");
-					objectOutputStream.writeObject(NewMessage);
-					SocketOpen = false;
+					logout(NewMessage);
 					break;
 
 				case "text message":
@@ -517,6 +515,12 @@ public class ServerThread implements Runnable {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void logout(Message m) {
+		m.setStatus("success");
+		send(m);
+		SocketOpen = false;
 	}
 	
 
