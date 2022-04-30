@@ -14,9 +14,9 @@ import java.util.List;
 
 public class ServerThread implements Runnable {
 	private Boolean SocketOpen = true;
-	
+
 	protected Person person = null;
-	
+
 	private Socket socket;
 	private static Server server;
 	private OutputStream outputStream;
@@ -27,13 +27,13 @@ public class ServerThread implements Runnable {
 	ServerThread(Socket socket, Server server) {
 		this.socket = socket;
 		ServerThread.server = server;
-		
+
 		try {
 			this.outputStream = socket.getOutputStream();
 			this.objectOutputStream = new ObjectOutputStream(outputStream);
 			this.inputStream = socket.getInputStream();
 			this.objectInputStream = new ObjectInputStream(inputStream);
-			
+
 		} catch (Exception e) {
 			SocketOpen = false;
 			System.out.println("Error:" + socket);
@@ -47,8 +47,10 @@ public class ServerThread implements Runnable {
 
 		System.out.println("Connected: " + socket);
 
+		server.listProfiles();
+
 		try {
-			
+
 			// Wait for a login messages
 			// Continue look if failed login
 //			while (SocketOpen) {
@@ -73,12 +75,12 @@ public class ServerThread implements Runnable {
 //									.getHostAddress());
 //				}
 //			}
-			
-			while(this.person == null || this.person.isLoggedIn() == false) {
+
+			while (this.person == null || this.person.isLoggedIn() == false) {
 				Message NewMessage = (Message) objectInputStream.readObject();
 				login(NewMessage);
 			}
-			
+
 ////			//For Testing
 //			Message m = new Message();
 //			m.setType("conversation data");
@@ -107,98 +109,168 @@ public class ServerThread implements Runnable {
 //			m3.appendToData("Harry,532134,hello2");	// Chat Message
 //			m3.appendToData("Jacob,532134,hello");	// Chat Message
 //			objectOutputStream.writeObject(m3);	// Send Message
-			
-			
-			
-			//Wait for other client messages after a good login
+
+			// Wait for other client messages after a good login
 			while (SocketOpen) {
 				Message NewMessage = (Message) objectInputStream.readObject();
-				
-				//sendToOther(NewMessage);
-				
+
+				// sendToOther(NewMessage);
 				PrintMessage(NewMessage);
-				if (NewMessage.getType().equals(new String("logout message"))) {
+
+				switch (NewMessage.getType()) {
+				case "logout message":
 					NewMessage.setStatus("success");
 					objectOutputStream.writeObject(NewMessage);
 					SocketOpen = false;
 					break;
-				} else if (NewMessage.getType().equals(new String("text message"))) {
-					
-					//Client is sending a text message
+
+				case "text message":
+					// Client is sending a text message
 					try {
 						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
 						String ChatID = data.get(0);
 						String ChatMessage = data.get(1);
-			    		}catch(ArrayIndexOutOfBoundsException exception){
+					} catch (ArrayIndexOutOfBoundsException exception) {
 					}
-					continue;
-					
-				} else if (NewMessage.getType().equals(new String("new chat"))) {
-					
-					//Client is wanting to make a new chat
+					break;
+
+				case "new chat":
+					// Client is wanting to make a new chat
 					try {
 						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
-							String ChatName = data.get(0);
-				    		String Username = data.get(1);
-				    		String msgData = server.getChatId() + "\n" + ChatName + "\n" + this.person.getUsername() + "," + Username;
-				    		NewMessage.setData(msgData);
-				    		NewMessage.setType("conversation data");
-				    		send(NewMessage);
-			    		}catch(ArrayIndexOutOfBoundsException exception){
+						String ChatName = data.get(0);
+						String Username = data.get(1);
+						String msgData = server.getChatId() + "\n" + ChatName + "\n" + this.person.getUsername() + ","
+								+ Username;
+						NewMessage.setData(msgData);
+						NewMessage.setType("conversation data");
+						send(NewMessage);
+					} catch (ArrayIndexOutOfBoundsException exception) {
 					}
-					continue;
-					
-				} else if (NewMessage.getType().equals(new String("new chat user"))) {
-					
-					//Client is asking you to add a person to the chat
-			    		try {
+					break;
+
+				case "new chat user":
+					// Client is asking you to add a person to the chat
+					try {
 						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
 						String ChatID = data.get(0);
 						String Username = data.get(1);
-			    		}catch(ArrayIndexOutOfBoundsException exception){
+					} catch (ArrayIndexOutOfBoundsException exception) {
 					}
-					continue;
-					
-				} else if (NewMessage.getType().equals(new String("refresh"))) {
-					
-					//Client asking to send each conversation they are in to them
+					break;
+
+				case "refresh":
+					// Client asking to send each conversation they are in to them
 					// NO DATA
-					continue;
-					
-				} else if (NewMessage.getType().equals(new String("create user"))) {
-					
-					//IT creating new user
-			    		try {
-						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
-						String Username = data.get(0);
-						String Password = data.get(1);
-						String UserType = data.get(2);
-			    		}catch(ArrayIndexOutOfBoundsException exception){
-					}
-					continue;
-					
-				} else if (NewMessage.getType().equals(new String("delete user"))) {
-					
-					//IT deleting user
-					try {
-						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
-						String Username = data.get(0);
-					}catch(ArrayIndexOutOfBoundsException exception){
-					}
-					continue;
-					
-				} else if (NewMessage.getType().equals(new String("get chat log"))) {
-					//IT requesting chat logs
+					break;
+
+				case "create user":
+					// IT creating new user
+					createUser(NewMessage);
+					break;
+
+				case "delete user":
+					// IT deleting user
+					deleteUser(NewMessage);
+					break;
+
+				case "get chat log":
+					// IT requesting chat logs
 					// NO DATA
-					continue;
+					break;
+				default:
+					// failed to handle message
+					// sending failed message back to client
+					NewMessage.setStatus("fail");
+					objectOutputStream.writeObject(NewMessage);
+					break;
 				}
-				
+
+//				PrintMessage(NewMessage);
+//				if (NewMessage.getType().equals(new String("logout message"))) {
+//					NewMessage.setStatus("success");
+//					objectOutputStream.writeObject(NewMessage);
+//					SocketOpen = false;
+//					break;
+//				} else if (NewMessage.getType().equals(new String("text message"))) {
+//					
+//					//Client is sending a text message
+//					try {
+//						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
+//						String ChatID = data.get(0);
+//						String ChatMessage = data.get(1);
+//			    		}catch(ArrayIndexOutOfBoundsException exception){
+//					}
+//					continue;
+//					
+//				} else if (NewMessage.getType().equals(new String("new chat"))) {
+//					
+//					//Client is wanting to make a new chat
+//					try {
+//						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
+//							String ChatName = data.get(0);
+//				    		String Username = data.get(1);
+//				    		String msgData = server.getChatId() + "\n" + ChatName + "\n" + this.person.getUsername() + "," + Username;
+//				    		NewMessage.setData(msgData);
+//				    		NewMessage.setType("conversation data");
+//				    		send(NewMessage);
+//			    		}catch(ArrayIndexOutOfBoundsException exception){
+//					}
+//					continue;
+//					
+//				} else if (NewMessage.getType().equals(new String("new chat user"))) {
+//					
+//					//Client is asking you to add a person to the chat
+//			    		try {
+//						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
+//						String ChatID = data.get(0);
+//						String Username = data.get(1);
+//			    		}catch(ArrayIndexOutOfBoundsException exception){
+//					}
+//					continue;
+//					
+//				} else if (NewMessage.getType().equals(new String("refresh"))) {
+//					
+//					//Client asking to send each conversation they are in to them
+//					// NO DATA
+//					continue;
+//					
+//				} else if (NewMessage.getType().equals(new String("create user"))) {
+//					
+//					//IT creating new user
+//			    		try {
+//						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
+//						String Username = data.get(0);
+//						String Password = data.get(1);
+//						String UserType = data.get(2);
+//						createUser(NewMessage);
+//			    		}catch(ArrayIndexOutOfBoundsException exception){
+//					}
+//					continue;
+//					
+//				} else if (NewMessage.getType().equals(new String("delete user"))) {
+//					
+//					//IT deleting user
+//					try {
+//						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
+//						String Username = data.get(0);
+//						deleteUser(NewMessage);
+//					}catch(ArrayIndexOutOfBoundsException exception){
+//					}
+//					continue;
+//					
+//				} else if (NewMessage.getType().equals(new String("get chat log"))) {
+//					//IT requesting chat logs
+//					// NO DATA
+//					continue;
+//				}
+
 				// failed to handle message
 				// sending failed message back to client
-				NewMessage.setStatus("fail");
-				objectOutputStream.writeObject(NewMessage);
+//				NewMessage.setStatus("fail");
+//				objectOutputStream.writeObject(NewMessage);
 			}
-			
+
 		} catch (IOException e) {
 			SocketOpen = false;
 		} catch (ClassNotFoundException e) {
@@ -206,32 +278,34 @@ public class ServerThread implements Runnable {
 			SocketOpen = false;
 			e.printStackTrace();
 		}
-		
+
 		try {
-			//Closing Socket
+			// Closing Socket
 			SocketOpen = false;
 			socket.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		System.out.println("Closed: " + socket);
 
 	}
-	
+
 	private static void PrintMessage(Message msg) {
 		System.out.println("-----------------------------------------------------------");
 		System.out.println("Type: " + msg.getType());
 		System.out.println("Status: " + msg.getStatus());
 		System.out.println("Data: " + msg.getData());
 	}
-	
+
 	private void login(Message m) {
 		// validate that login() is being used correctly
-		if(m.getType().equals("login message") == false) return; 
+		if (m.getType().equals("login message") == false)
+			return;
 		String[] parts = m.getData().split("\n");
-		if(parts.length < 2) return;
+		if (parts.length < 2)
+			return;
 		String username = parts[0];
 		String password = parts[1];
 		if (person == null || person.isLoggedIn() != false) {
@@ -246,11 +320,12 @@ public class ServerThread implements Runnable {
 						m.setStatus("success");
 						m.setData(user.getUserType());
 						objectOutputStream.writeObject(m);
-						System.out.println("{ \nUser : " + username + "\nPassword : " + password +  "\nlogged in successfully\n}");
-						server.getActiveUsers().put(username, this);	
+						System.out.println(
+								"{ \nUser : " + username + "\nPassword : " + password + "\nlogged in successfully\n}");
+						server.getActiveUsers().put(username, this);
 						return;
 					} catch (IOException e) {
-			
+
 					}
 				}
 			}
@@ -259,72 +334,70 @@ public class ServerThread implements Runnable {
 			try {
 				m.setStatus("failed");
 				objectOutputStream.writeObject(m);
-				System.out.println("{ \nUser : " + username + "\nPassword : " + password +  "\nfailed to login\n}");
+				System.out.println("{ \nUser : " + username + "\nPassword : " + password + "\nfailed to login\n}");
 			} catch (IOException e) {
-				
+
 			}
 		}
 	}
-	
+
 	private void sendToOther(Message m) {
-		//this function takes the message in the current thread, and finds the correct
-		//user or thread to send it to .
-		
-		//Data: "Chat-ID
+		// this function takes the message in the current thread, and finds the correct
+		// user or thread to send it to .
+
+		// Data: "Chat-ID
 //		Chat-Name
 //		Username, Username, Username, ...
 //		Username, Date, Text
 //		Username, Date, Text
 //		Username, Date, Text"
 		PrintMessage(m);
-		//parse message data by newline
+		// parse message data by newline
 		List<String> dataList = Arrays.asList(m.getData().split("\n"));
 		// get users from message
 		List<String> members = null;
-		if(dataList.size() >= 2) {
-			members = Arrays.asList(dataList.get(1).split(", ")); 
+		if (dataList.size() >= 2) {
+			members = Arrays.asList(dataList.get(1).split(", "));
 		}
-		//send a message to each active user
-		for(String member: members) {
+		// send a message to each active user
+		for (String member : members) {
 			ServerThread memberThread = server.getActiveUsers().get(member);
-			if(memberThread != null) {
+			if (memberThread != null) {
 				memberThread.send(m);
 			} else {
 				System.out.println(member + " is not logged in");
 			}
 		}
-		
-	}
-	
 
+	}
 
 	private void send(Message m) {
-		if(this.person == null || this.person.isLoggedIn() == false) return;
+		if (this.person == null || this.person.isLoggedIn() == false)
+			return;
 		try {
 			objectOutputStream.writeObject(m);
 			System.out.println("Message sent to " + this.person.getUsername());
 			PrintMessage(m);
 		} catch (IOException e) {
-			
+
 		}
 	}
-	
-	
-	
-	//IT methods
+
+	// IT methods
 	private void createUser(Message m) {
-		if(this.person.getUserType().toLowerCase().equals("it") == false || m.getType().equals("create user") == false) {
+		if (this.person.getUserType().toLowerCase().equals("it") == false
+				|| m.getType().equals("create user") == false) {
 			return;
 		}
 		List<String> dataList = Arrays.asList(m.getData().split("\n"));
-		if(dataList.size() < 3) {
+		if (dataList.size() < 3) {
 			System.out.println("Not enough data to create user");
 			return;
 		}
-		//data list contains username, password, userType
-		//verify the user doesn't exist
-		for(int i = 0; i < server.getProfiles().size(); i++) {
-			if(server.getProfiles().get(i).getUsername().equals(dataList.get(0))) {
+		// data list contains username, password, userType
+		// verify the user doesn't exist
+		for (int i = 0; i < server.getProfiles().size(); i++) {
+			if (server.getProfiles().get(i).getUsername().equals(dataList.get(0))) {
 				System.out.println("User already exists ");
 				m.setType("IT command return Info");
 				m.setData("user already exists");
@@ -332,12 +405,11 @@ public class ServerThread implements Runnable {
 				return;
 			}
 		}
-		
-		
-		server.getProfiles().add(new Person(dataList.get(0),dataList.get(0),dataList.get(0)));
-		//save the current state of profiles to a file
+
+		server.getProfiles().add(new Person(dataList.get(0), dataList.get(1), dataList.get(2)));
+		// save the current state of profiles to a file
 		try {
-			server.saveProfiles(server.getProfiles());
+			server.saveProfiles();
 		} catch (FileNotFoundException e) {
 			System.out.println(e);
 		}
@@ -345,48 +417,53 @@ public class ServerThread implements Runnable {
 		m.setType("IT command return Info");
 		m.setData("new user created");
 		send(m);
+		server.listProfiles();
 	}
-	
+
 	private void deleteUser(Message m) {
-		if(this.person.getUserType().toLowerCase().equals("it") == false || m.getType().equals("delete user") == false) {
+		if (this.person.getUserType().toLowerCase().equals("it") == false
+				|| m.getType().equals("delete user") == false) {
 			return;
 		}
-		String username = m.getData();
-		if(username.equals("")) return;
-		//find the username in current profiles list
-		for(int i = 0; i < server.getProfiles().size(); i++) {
-			if(server.getProfiles().get(i).getUsername().equals(username)) {
-				//delete user when found
-				server.getProfiles().remove(i);
+		List<String> dataList = Arrays.asList(m.getData().split("\n"));
+		if (dataList.size() <= 0)
+			return;
+		String username = dataList.get(0);
+		System.out.println("username is " + username);
+		// find the username in current profiles list
+		for (Person user : server.getProfiles()) {
+			if (user.getUsername().equals(username)) {
+				// delete user when found
+				server.getProfiles().remove(user);
 				System.out.println("Deleted user");
 				m.setType("IT command return Info");
 				m.setData("deleted user");
 				send(m);
-				//save the current state of profiles to a file
+				// save the current state of profiles to a file
 				try {
-					server.saveProfiles(server.getProfiles());
+					server.saveProfiles();
 				} catch (FileNotFoundException e) {
 					System.out.println(e);
 				}
 				return;
 			}
 		}
+
 		System.out.println("Could not find user to delete");
 		m.setType("IT command return Info");
 		m.setData("Could not find user to delete");
 		send(m);
+		server.listProfiles();
 	}
-	
+
 	private void getLog(Message m) {
-		if(this.person.getUserType().toLowerCase().equals("it") == false || m.getType().equals("get chat log") == false) {
+		if (this.person.getUserType().toLowerCase().equals("it") == false
+				|| m.getType().equals("get chat log") == false) {
 			return;
 		}
-		
-		//call server.log.getChatLog();
-		//send chatlog as message back to server
+
+		// call server.log.getChatLog();
+		// send chatlog as message back to server
 	}
-	
-	
-	
 
 }
