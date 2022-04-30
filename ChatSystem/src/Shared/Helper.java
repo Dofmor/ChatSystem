@@ -13,8 +13,8 @@ public class Helper {
 	public static String removeFirstChar(String str){ return str.substring(1); }
 	public static String removeLastCharacter(String str) { return str.substring(0, str.length() - 1); }
 	public static String RemoveSpaces(String str) {		
-        while (str.startsWith(" ")) { str = removeFirstChar(str); }
-        while (str.endsWith(" ")) { str = removeLastCharacter(str); }
+        	while (str.startsWith(" ")) { str = removeFirstChar(str); }
+        	while (str.endsWith(" ")) { str = removeLastCharacter(str); }
 		return str;
 	}
 	
