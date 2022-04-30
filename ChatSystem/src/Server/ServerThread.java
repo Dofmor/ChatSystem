@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -136,17 +137,7 @@ public class ServerThread implements Runnable {
 
 				case "new chat":
 					// Client is wanting to make a new chat
-					try {
-						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
-						String ChatName = data.get(0);
-						String Username = data.get(1);
-						String msgData = server.getChatId() + "\n" + ChatName + "\n" + this.person.getUsername() + ","
-								+ Username;
-						NewMessage.setData(msgData);
-						NewMessage.setType("conversation data");
-						send(NewMessage);
-					} catch (ArrayIndexOutOfBoundsException exception) {
-					}
+					newChat(NewMessage);
 					break;
 
 				case "new chat user":
@@ -323,6 +314,16 @@ public class ServerThread implements Runnable {
 						System.out.println(
 								"{ \nUser : " + username + "\nPassword : " + password + "\nlogged in successfully\n}");
 						server.getActiveUsers().put(username, this);
+						
+						
+						//send all the users conversations back to client
+						for(Conversation c: server.getConversations()) {
+							if(c.isMember(username)) {
+								Message conversationMsg = c.convertToMessage();
+								send(conversationMsg);
+							}
+						}
+						
 						return;
 					} catch (IOException e) {
 
@@ -353,11 +354,11 @@ public class ServerThread implements Runnable {
 //		Username, Date, Text"
 		PrintMessage(m);
 		// parse message data by newline
-		List<String> dataList = Arrays.asList(m.getData().split("\n"));
+		List<String> data = Arrays.asList(m.getData().split("\n"));
 		// get users from message
 		List<String> members = null;
-		if (dataList.size() >= 2) {
-			members = Arrays.asList(dataList.get(1).split(", "));
+		if (data.size() >= 2) {
+			members = Arrays.asList(data.get(1).split(", "));
 		}
 		// send a message to each active user
 		for (String member : members) {
@@ -389,15 +390,15 @@ public class ServerThread implements Runnable {
 				|| m.getType().equals("create user") == false) {
 			return;
 		}
-		List<String> dataList = Arrays.asList(m.getData().split("\n"));
-		if (dataList.size() < 3) {
+		List<String> data = Arrays.asList(m.getData().split("\n"));
+		if (data.size() < 3) {
 			System.out.println("Not enough data to create user");
 			return;
 		}
 		// data list contains username, password, userType
 		// verify the user doesn't exist
 		for (int i = 0; i < server.getProfiles().size(); i++) {
-			if (server.getProfiles().get(i).getUsername().equals(dataList.get(0))) {
+			if (server.getProfiles().get(i).getUsername().equals(data.get(0))) {
 				System.out.println("User already exists ");
 				m.setType("IT command return Info");
 				m.setData("user already exists");
@@ -406,7 +407,7 @@ public class ServerThread implements Runnable {
 			}
 		}
 
-		server.getProfiles().add(new Person(dataList.get(0), dataList.get(1), dataList.get(2)));
+		server.getProfiles().add(new Person(data.get(0), data.get(1), data.get(2)));
 		// save the current state of profiles to a file
 		try {
 			server.saveProfiles();
@@ -425,10 +426,10 @@ public class ServerThread implements Runnable {
 				|| m.getType().equals("delete user") == false) {
 			return;
 		}
-		List<String> dataList = Arrays.asList(m.getData().split("\n"));
-		if (dataList.size() <= 0)
+		List<String> data = Arrays.asList(m.getData().split("\n"));
+		if (data.size() <= 0)
 			return;
-		String username = dataList.get(0);
+		String username = data.get(0);
 		System.out.println("username is " + username);
 		// find the username in current profiles list
 		for (Person user : server.getProfiles()) {
@@ -464,6 +465,34 @@ public class ServerThread implements Runnable {
 
 		// call server.log.getChatLog();
 		// send chatlog as message back to server
+	}
+	
+	private void newChat(Message m) {
+		List<String> data = Arrays.asList(m.getData().split("\n"));
+		try {
+			//get data variables for new conversation
+			String chatName = data.get(0);
+			String username = data.get(1);
+			List<String> users = new ArrayList<>();
+			users.add(this.person.getUsername());
+			users.add(username);
+			ArrayList<String[]> chat =  new ArrayList<String[]>();
+			chat.add(new String[] {"","",""});
+			String id = "" + (server.getConversations().size() + 1);
+			Conversation newConvo = new Conversation(chatName,id,users,chat);
+			
+			//add the new conversation to the conversation list
+			server.addConversation(newConvo);
+			
+			//send the message back to server
+			m = newConvo.convertToMessage();
+			m.setType("conversation data");
+			send(m);
+			
+		} catch(ArrayIndexOutOfBoundsException e) {
+			e.printStackTrace();
+		}
+	
 	}
 
 }
