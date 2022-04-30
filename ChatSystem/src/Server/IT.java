@@ -1,8 +1,18 @@
 package Server;
 
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+
 //This class should extend server to be able to access logs and users
 public class IT extends Person{
-
+	private Server server;
+	private Log log;
+	
+	private String username;
+	private String password;
+	private String userType;
+	
 	public IT(String username, String password, String userType) {
 		super(username,password,userType);
 	}
@@ -32,9 +42,9 @@ public class IT extends Person{
 	}
 
 	//Calls the log function so we are able to read previous convo data
-	public String getChatLog() {
+	public List<String> getChatLog() {
 		//gets the Log
-		return getLog();
+		return log.getLog();
 	}
 	
 
@@ -49,12 +59,13 @@ public class IT extends Person{
 	 * 
 	 * This function is to create a user based on the information given by it
 	 * then the user is added to the array of users within the server
+	 * @throws FileNotFoundException 
 	 */
-  void createUser(String username, String password, String userType){
+  public void createUser(String username, String password, String userType) throws FileNotFoundException{
 		Person userTemp = new Person(username, password, userType);
-	  	ArrayList<Persons> profile = getProfiles();
+	  	ArrayList<Person> profile = server.getProfiles();
 		profile.add(userTemp);
-	  	saveProfiles(profile);
+	  	server.saveProfiles();
 	}
 	
   
@@ -70,14 +81,15 @@ public class IT extends Person{
 	 * 
 	 * This function is to delete a user based on the information given by it
 	 * then the user is removed from the array of users within the server if they exist
+	 * @throws FileNotFoundException 
 	 */
-  void deleteUser(String username){
-	  	ArrayList<Persons> profile = getProfiles();
+  public void deleteUser(String username) throws FileNotFoundException{
+	  	ArrayList<Person> profile = server.getProfiles();
 		for(int i = 0; i < profile.size(); i++){
-			if(profile[i].getUsername().equals(username)){
+			if(profile.get(i).getUsername().equals(username)){
 				profile.remove(i);
 			}
 		}
-	  	saveProfiles(profile);
+	  	server.saveProfiles();
 	}
 }
