@@ -1,5 +1,5 @@
 admin password IT
-daniel guess Person
+Daniel guess Person
 john pass IT
 john pass IT
 john pass IT
