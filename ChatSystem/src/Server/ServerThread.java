@@ -127,12 +127,7 @@ public class ServerThread implements Runnable {
 
 				case "text message":
 					// Client is sending a text message
-					try {
-						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
-						String ChatID = data.get(0);
-						String ChatMessage = data.get(1);
-					} catch (ArrayIndexOutOfBoundsException exception) {
-					}
+					textMessage(NewMessage);
 					break;
 
 				case "new chat":
@@ -357,8 +352,10 @@ public class ServerThread implements Runnable {
 		List<String> data = Arrays.asList(m.getData().split("\n"));
 		// get users from message
 		List<String> members = null;
-		if (data.size() >= 2) {
-			members = Arrays.asList(data.get(1).split(", "));
+		try {
+			members = Arrays.asList(data.get(2).split(" "));
+		} catch(ArrayIndexOutOfBoundsException e) {
+			e.printStackTrace();
 		}
 		// send a message to each active user
 		for (String member : members) {
@@ -493,6 +490,35 @@ public class ServerThread implements Runnable {
 			e.printStackTrace();
 		}
 	
+	}
+	
+	private void textMessage(Message m) {
+		try {
+			List<String> data = Arrays.asList(m.getData().split("\n"));
+			String chatID = data.get(0);
+			String chatMessage = data.get(1);
+			String[] chat = new String[] {this.person.getUsername(),m.getDate(),chatMessage};
+			//find the conversation to load the text message in
+			for(Conversation c: server.getConversations()) {
+				if(c.ID.equals(chatID)) {
+					c.addChat(chat);
+					try {
+						//save conversation to file
+						server.saveConversations();
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+					
+					//send the message to all other users
+					 sendToOther(c.convertToMessage());
+					break;
+				}
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 }
