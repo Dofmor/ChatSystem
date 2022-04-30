@@ -90,7 +90,7 @@ public class Conversation {
 			}
 		}
 		str = str + "\n";
-		if (Chats.size() == 0) {
+		if (Chats.size() != 0) {
 			for (int i = 0; i < Chats.size(); i++) {
 				str = str + Chats.get(i)[0] + " " + Chats.get(i)[1] + " " + Chats.get(i)[2] + "\n";
 			}
