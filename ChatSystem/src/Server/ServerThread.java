@@ -477,7 +477,7 @@ public class ServerThread implements Runnable {
 			users.add(this.person.getUsername());
 			users.add(username);
 			ArrayList<String[]> chat =  new ArrayList<String[]>();
-			chat.add(new String[] {"","",""});
+			chat.add(new String[] {"", "", ""});
 			String id = "" + (server.getConversations().size() + 1);
 			Conversation newConvo = new Conversation(chatName,id,users,chat);
 			
@@ -485,9 +485,7 @@ public class ServerThread implements Runnable {
 			server.addConversation(newConvo);
 			
 			//send the message back to server
-			m = newConvo.convertToMessage();
-			m.setType("conversation data");
-			send(m);
+			send(newConvo.convertToMessage());
 			
 		} catch(ArrayIndexOutOfBoundsException e) {
 			e.printStackTrace();

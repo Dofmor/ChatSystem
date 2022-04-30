@@ -52,25 +52,9 @@ public class Conversation {
 	public Message convertToMessage() {
 		Message msg = new Message();
 		msg.setType("conversation data");
-		String str = "";
-		str = str + ID + "\n";
-		str = str + Name + "\n";
-		for (int i = 0; i < Members.size(); i++) {
-			str = str + Members.get(i);
-			if (Members.size()-1 != i) {
-				str = str + " ";
-			}
-		}	str = str + "\n";
-		for (int i = 0; i < Chats.size(); i++) {
-			str = str + Chats.get(i)[0] + " " +  Chats.get(i)[1] + " " +  Chats.get(i)[2]  + "\n";
-		}
-		msg.setData(str);
+		msg.setData(toString());
 		return msg;
 	}
-	
-	
-	
-	
 	
 	public String toString() {
 		String str = "";
@@ -89,18 +73,12 @@ public class Conversation {
 		return str;
 	}
 	
-	
-	
-	
-	
-	
 	public String chatsToText() {
 		String str = "";
 		for (int i = 0; i < Chats.size(); i++) {
 			str = str + Chats.get(i)[0] + ": ";
 			str = str + Chats.get(i)[2] + "\n";
 		}
-		
 		return str;
 	}
 	
