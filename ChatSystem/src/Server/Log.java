@@ -1,155 +1,107 @@
 package Server;
 
+package Server;
+
+import java.io.*;
+
+import java.util.*;
 import Shared.*;
 
 
-import java.io.*;
-import java.util.*;
+public class log  {
+	private Message m;
+	
 
-public class Log  {
-	private Message[] m;
-	private Message m1;
-	private Server s;
+
+
 	/** this is to call from message /
 	 * 
 	 * @return
 	 */
-	private String[] ConversationData;
+	private String ConversationData;
 	/**conversation data
 	 * 
 	 */
-	private String[] UserData;
+	private String UserData;
 	/**
 	 * 
 	 * This is the user data
 	 */
-	private List<String> log;
 	
-	public log(Message[] m, Message m1, Server s, String[] conversationData, String[] userData, List<String> log) {
-		super();
+	public log(Message m, String conversationData, String userData) {
 		this.m = m;
-		this.m1 = m1;
-		this.s = s;
 		ConversationData = conversationData;
 		UserData = userData;
-		this.log = log;
 	}
-	public Message[] getM() {
+	
+
+
+
+
+	public Message getM() {
 		return m;
 	}
-	public void setM(Message[] m) {
+	public void setM(Message m) {
 		this.m = m;
 	}
-	public Message getM1() {
-		return m1;
-	}
-	public void setM1(Message m1) {
-		this.m1 = m1;
-	}
-	public Server getS() {
-		return s;
-	}
-	public void setS(Server s) {
-		this.s = s;
-	}
-	public String[] getConversationData() {
+
+
+	public String getConversationData() {
 		return ConversationData;
 	}
-	public void setConversationData(String[] conversationData) {
+	public void setConversationData(String conversationData) {
 		ConversationData = conversationData;
 	}
-	public String[] getUserData() {
+	public String getUserData() {
 		return UserData;
 	}
-	public void setUserData(String[] userData) {
+	public void setUserData(String userData) {
 		UserData = userData;
 	}
-	public List<String> getLog() {
-		return log;
-	}
-	public void setLog(List<String> log) {
-		this.log = log;
-	}
+
+
+	
 	
 
 
-	@SuppressWarnings("null")
-	void loadlog() {
-		 String line = "";
 
-	       boolean found = false;
-	       Scanner in = null;
-
-		try {
-          Scanner scanner= new Scanner(line);
-          while (scanner.hasNextLine()) {
-          	String data = scanner.nextLine();
-          	System.out.println(data);
-          }
-          scanner.close();
-      } catch (Exception e) {
-      System.out.println(e);
-      }
-		
-		 if (found) {
-	           while (in.hasNext()) {
-	               line = in.nextLine();
-	               addMessage();
-	         
-	           }
-	       } else {
-	           new Message(line, line, line, line, line, line);
-	       }
-		}
-
-	void addMessage() {
-		//format message
-		String formattedMsg = ""; //formatted message should be date, time, sender, receivers, message
-		Message m =new Message(formattedMsg, formattedMsg, formattedMsg, formattedMsg, formattedMsg, formattedMsg);
-		log= new ArrayList<String>();
-		log.add(formattedMsg);
-		m.getToServer();
-		} 
+/**
+ * Log functions for logging a new message to the conversations arraylist 
+ *  Returning the entire arraylist of conversations as a single string 
+ * so the server can send it back to the client. 
+ * Thanks 
+ * @return 
+ * 
+ **/
 	
 
-	void saveLog() {
-		String chat = new String();
-	    //write a new string
-    		if(chat.isBlank()) { 
-    			  StringWriter sw = new StringWriter();
-    		        PrintWriter pw = new PrintWriter(sw);
-    		        pw.println();
-    		        pw.close(); 
-			}
-		
-					}
-			
-	
+
+
 	public void LogMessage() {
-		m1= new Message("", "", "", "", "", "");
-		m1.getFromServer();
-		m1.getFromClient();
-		loadlog();
-		addMessage();
-		saveLog();
+		List<String> Members=new ArrayList<String>();
+		ArrayList<Conversation> con = new ArrayList<>();
+		String ID="";
+		String Username = "";
+		ArrayList<String[]> chat=new ArrayList<String[]>();
+		Conversation c= new Conversation(Username, ID, Members, chat);
+			m= new Message("", "", "", "", "", "");	
+			for (int x=0; x<con.size();x++) {
+			con.add(c);
+			
+			}
+	        }
+	            
 	
-		}
-	
-	public void sendLogs() {
-		m1= new Message("", "", "", "", "", "");
-		s= new Server(0);
-		
+
+	public void sendLogs() throws FileNotFoundException {
+		m= new Message("", "", "", "", "", "");
+		Server s=new Server(0);
 		LogMessage();
-		saveLog();
-		m1.getToServer();
-		s.getserverThreads();
-		
-		/**
-		 *  this is to send message logs to the server
-		 */
-		
+		m.getToServer();
+		s.saveConversations();
 		
 	}
 
 
 	}
+
