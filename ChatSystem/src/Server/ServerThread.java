@@ -147,7 +147,7 @@ public class ServerThread implements Runnable {
 
 				case "refresh":
 					// Client asking to send each conversation they are in to them
-					// NO DATA
+					refresh();
 					break;
 
 				case "create user":
@@ -311,13 +311,13 @@ public class ServerThread implements Runnable {
 						server.getActiveUsers().put(username, this);
 						
 						
-						//send all the users conversations back to client
-						for(Conversation c: server.getConversations()) {
-							if(c.isMember(username)) {
-								Message conversationMsg = c.convertToMessage();
-								send(conversationMsg);
-							}
-						}
+//						//send all the users conversations back to client
+//						for(Conversation c: server.getConversations()) {
+//							if(c.isMember(username)) {
+//								Message conversationMsg = c.convertToMessage();
+//								send(conversationMsg);
+//							}
+//						}
 						
 						return;
 					} catch (IOException e) {
@@ -516,6 +516,17 @@ public class ServerThread implements Runnable {
 			e.printStackTrace();
 		}
 		
+		
+	}
+	
+	private void refresh() {
+		//send all the users conversations back to client
+		for(Conversation c: server.getConversations()) {
+			if(c.isMember(this.person.getUsername())) {
+				Message conversationMsg = c.convertToMessage();
+				send(conversationMsg);
+			}
+		}
 		
 	}
 
