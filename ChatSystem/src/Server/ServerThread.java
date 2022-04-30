@@ -54,29 +54,6 @@ public class ServerThread implements Runnable {
 
 			// Wait for a login messages
 			// Continue look if failed login
-//			while (SocketOpen) {
-//				Message NewMessage = (Message) objectInputStream.readObject();
-//				
-//				if (NewMessage.getType().equals(new String("login"))) {
-//					
-//					
-//					if (true) { //if login success
-//						NewMessage.setStatus("success");
-//						objectOutputStream.writeObject(NewMessage);
-//						PrintMessage(NewMessage);
-//						
-//						break;
-////					} else {
-////						NewMessage.setStatus("failed");
-////						objectOutputStream.writeObject(NewMessage);
-//					}
-//				} else {
-//					System.out.println("message ignored: "
-//							+ socket.getInetAddress()
-//									.getHostAddress());
-//				}
-//			}
-
 			while (this.person == null || this.person.isLoggedIn() == false) {
 				Message NewMessage = (Message) objectInputStream.readObject();
 				login(NewMessage);
@@ -137,12 +114,7 @@ public class ServerThread implements Runnable {
 
 				case "new chat user":
 					// Client is asking you to add a person to the chat
-					try {
-						List<String> data = Arrays.asList(NewMessage.getData().split("\n"));
-						String ChatID = data.get(0);
-						String Username = data.get(1);
-					} catch (ArrayIndexOutOfBoundsException exception) {
-					}
+					newChatUser(NewMessage);
 					break;
 
 				case "refresh":
@@ -309,15 +281,9 @@ public class ServerThread implements Runnable {
 						System.out.println(
 								"{ \nUser : " + username + "\nPassword : " + password + "\nlogged in successfully\n}");
 						server.getActiveUsers().put(username, this);
-						
-						
-//						//send all the users conversations back to client
-//						for(Conversation c: server.getConversations()) {
-//							if(c.isMember(username)) {
-//								Message conversationMsg = c.convertToMessage();
-//								send(conversationMsg);
-//							}
-//						}
+											
+						//send all the users conversations back to client
+						refresh();
 						
 						return;
 					} catch (IOException e) {
@@ -341,12 +307,6 @@ public class ServerThread implements Runnable {
 		// this function takes the message in the current thread, and finds the correct
 		// user or thread to send it to .
 
-		// Data: "Chat-ID
-//		Chat-Name
-//		Username, Username, Username, ...
-//		Username, Date, Text
-//		Username, Date, Text
-//		Username, Date, Text"
 		PrintMessage(m);
 		// parse message data by newline
 		List<String> data = Arrays.asList(m.getData().split("\n"));
@@ -529,5 +489,35 @@ public class ServerThread implements Runnable {
 		}
 		
 	}
+	
+	private void newChatUser(Message m) {
+		try {
+			List<String> data = Arrays.asList(m.getData().split("\n"));
+			String chatID = data.get(0);
+			String username = data.get(1);
+			
+			for(Conversation c: server.getConversations()) {
+				//find the correct conversation
+				if(c.ID.equals(chatID)) {
+					//If the correct conversation is found add the user to that conversation
+					c.addMember(username);
+					//save the current state of conversations to a file
+					try {
+						server.saveConversations();
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+					
+					//send the conversation to all members
+					Message conversationMsg = c.convertToMessage();
+					sendToOther(conversationMsg);
+					break;
+				}
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			e.printStackTrace();
+		}
+	}
+	
 
 }
