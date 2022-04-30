@@ -22,18 +22,11 @@ public class Server {
 	private HashMap<String,ServerThread> activeUsers = new HashMap<>();
 	private String profilesFile = "profiles.txt";
 	private String conversationsFile = "conversations.txt";
-	private int chatId = 0;
 
 	public Server(int port) {
 		this.port = port;
-		chatId = 0;
 	}
 	
-	public int getChatId() {
-		this.chatId++;
-		return chatId;
-	}
-
 	public ArrayList<Person> getProfiles() {
 		return profiles;
 	}
@@ -123,6 +116,24 @@ public class Server {
 		}
 
 		write.close();
+	}
+
+	public ArrayList<Conversation> getConversations() {
+		return conversations;
+	}
+
+	public void setConversations(ArrayList<Conversation> conversations) {
+		this.conversations = conversations;
+	}
+	
+	public void addConversation(Conversation c) {
+		this.conversations.add(c);
+		try {
+			saveConversations();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
