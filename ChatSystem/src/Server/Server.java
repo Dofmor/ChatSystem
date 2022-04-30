@@ -65,6 +65,13 @@ public class Server {
 	public void setActiveUsers(HashMap<String, ServerThread> activeUsers) {
 		this.activeUsers = activeUsers;
 	}
+	
+	public void listProfiles() {
+		System.out.println("Current profiles are: " );
+		for(Person user: profiles) {
+			System.out.print(user.toString());
+		}
+	}
 
 	/**
 	 * Reads profiles from txt file
@@ -82,21 +89,16 @@ public class Server {
 			String userName, password, profileType;
 			read = new Scanner(file);
 			Person personProfile = null;
-			IT ITProfile = null;
+			//IT ITProfile = null;
 			System.out.println(profiles.size());
 			while (read.hasNext()) {
 				userName = read.next();
 				password = read.next();
 				profileType = read.next();
 				profileType = profileType.trim();
-
-				if (profileType.equals("IT")) {
-					ITProfile = new IT(userName, password, profileType);
-					profiles.add(ITProfile);
-				} else {
-					personProfile = new Person(userName, password, profileType);
-					profiles.add(personProfile);
-				}
+				personProfile = new Person(userName, password, profileType);
+				profiles.add(personProfile);
+				
 			}
 
 			read.close();
@@ -207,6 +209,8 @@ public class Server {
 
 	}
 	
+	
+	
 	/**
 	 * Writes all conversations from conversations arraylist onto conversatoinsFile 
 	 * @throws FileNotFoundException - if file is not found
@@ -244,8 +248,8 @@ public class Server {
 		// FAKE USERS FOR TESTING
 		profiles.add(new Person("user1", "pass1", "it"));
 		profiles.add(new Person("user2", "pass2", "regular"));
-		profiles.add(new Person("", "", "testuser"));
-
+		
+		
 		try {
 
 			// Setting the server to run on socket 7777
