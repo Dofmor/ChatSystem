@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 
 public class Client {
 	
-	
+	public static String UserType = "";
 	public static boolean SocketNotClosed = true;
 	
 	private static int port = 7777;
@@ -85,10 +85,11 @@ public class Client {
 				chatWindow.processCommands();
 	        }
 
-	        if (SocketNotClosed) {
+	        if (SocketNotClosed && UserType.equals(new String("IT"))) {
 	        	itWindow = new ITWindow(socket, objectOutputStream, objectInputStream,  this);
 	        	itWindow.processCommands();
 	        }
+
 
 	        
 	        try {
