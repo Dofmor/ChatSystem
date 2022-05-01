@@ -33,6 +33,7 @@ public class LoginWindow implements ClientUserInterface {
 			Message NewMessage = (Message) objectInput.readObject();
 			
 			if (NewMessage.getStatus().equals(new String("success"))) {
+				Client.UserType = NewMessage.getData();
 				return true;	
 			}
 		} catch (IOException e) {
