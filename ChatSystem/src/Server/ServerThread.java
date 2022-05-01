@@ -59,38 +59,11 @@ public class ServerThread implements Runnable {
 				login(NewMessage);
 			}
 
-////			//For Testing
-//			Message m = new Message();
-//			m.setType("conversation data");
-//			m.appendToData("1234");	// Chat ID
-//			m.appendToData("Fake Chat 1");	// Chat Name
-//			m.appendToData("Harry,Daniel,Nick,Brian,Jacob"); // Members in chat
-//			m.appendToData("Harry,532134,hello1");	// Chat Message
-//			m.appendToData("Harry,532134,hello2");	// Chat Message
-//			objectOutputStream.writeObject(m);	// Send Message
-//
-//			Message m2 = new Message();
-//			m2.setType("conversation data");
-//			m2.appendToData("5324");	// Chat ID
-//			m2.appendToData("Fake Chat 2");	// Chat Name
-//			m2.appendToData("Harry,Daniel,Nick,Brian,Jacob"); // Members in chat
-//			m2.appendToData("Harry,532134,asdfnfaidsnjaflds");	// Chat Message
-//			objectOutputStream.writeObject(m2);	// Send Message
-//
-//			
-//			Message m3 = new Message();
-//			m3.setType("conversation data");
-//			m3.appendToData("1234");	// Chat ID
-//			m3.appendToData("Fake Chat 1");	// Chat Name
-//			m3.appendToData("Harry,Daniel,Nick,Brian,Jacob"); // Members in chat
-//			m3.appendToData("Harry,532134,hello1");	// Chat Message
-//			m3.appendToData("Harry,532134,hello2");	// Chat Message
-//			m3.appendToData("Jacob,532134,hello");	// Chat Message
-//			objectOutputStream.writeObject(m3);	// Send Message
-
 			// Wait for other client messages after a good login
 			while (SocketOpen) {
 				Message NewMessage = (Message) objectInputStream.readObject();
+				//make the dataType in the new message all lower case
+				NewMessage.setType(NewMessage.getType().toLowerCase());
 
 				// sendToOther(NewMessage);
 				PrintMessage(NewMessage);
