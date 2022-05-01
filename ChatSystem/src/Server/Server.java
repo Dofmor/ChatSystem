@@ -257,8 +257,8 @@ public class Server {
 		}
 
 		// FAKE USERS FOR TESTING
-		profiles.add(new Person("user1", "pass1", "it"));
-		profiles.add(new Person("user2", "pass2", "regular"));
+//		profiles.add(new Person("user1", "pass1", "IT"));
+//		profiles.add(new Person("user2", "pass2", "Person"));
 		
 		
 		try {
