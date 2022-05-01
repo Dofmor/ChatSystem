@@ -331,9 +331,9 @@ public class ServerThread implements Runnable {
 			users.add(this.person.getUsername());
 			users.add(username);
 			ArrayList<String[]> chat = new ArrayList<String[]>();
-			chat.add(new String[] { "", "", "" });
+			//chat.add(new String[] { "", "", "" });
 			String id = "" + (server.getConversations().size() + 1);
-			Conversation newConvo = new Conversation(chatName, id, users, chat);
+			Conversation newConvo = new Conversation(chatName, id, users);
 
 			// add the new conversation to the conversation list
 			server.addConversation(newConvo);
