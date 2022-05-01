@@ -291,7 +291,6 @@ public class ChatWindow implements ClientUserInterface  {
 	}
 	
 	public static void UpdateChatText() {
-		
 		if (CurrentConvo != null) {
 			chatPanel.SetChatText(CurrentConvo.chatsToText());
 			chatPanel.SetMembersText(CurrentConvo.membersToText());
@@ -332,6 +331,7 @@ public class ChatWindow implements ClientUserInterface  {
 				Conversations.get(i).Name = newConvo.Name;
 				Conversations.get(i).Members = newConvo.Members;
 				Conversations.get(i).Chats = newConvo.Chats;
+				UpdateChatText();
 				return;
 			}
 		}
