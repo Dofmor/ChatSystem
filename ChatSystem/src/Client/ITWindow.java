@@ -31,7 +31,9 @@ public class ITWindow implements ClientUserInterface {
 	 //Created a panel variable to hold the panel
 	 private JPanel panel, panel2;
 	 Box infoBox;
-	 JLabel temp, tempTitle;
+	 JLabel tempTitle;
+	 JList<String> Display;
+	 ArrayList<String> wordlist;
 
 
 	 
@@ -99,11 +101,14 @@ public class ITWindow implements ClientUserInterface {
 		 panel.add(chatLogButton);
 		 panel.add(exitButton);
 		 
+		 wordlist = new ArrayList<String>();
+		 wordlist.add("");
+		 Display = new JList<>(wordlist.toArray(new String[0]));
+		 
 		 infoBox = Box.createVerticalBox();
 		 tempTitle = new JLabel("Info Returned Below");
-		 temp = new JLabel("");
 		 infoBox.add(tempTitle, BorderLayout.NORTH);
-		 infoBox.add(temp, BorderLayout.CENTER);
+		 infoBox.add(Display, BorderLayout.CENTER);
 		 panel2.add(infoBox);
 		 panel2.setBackground(Color.LIGHT_GRAY);
 		 
@@ -180,6 +185,8 @@ public class ITWindow implements ClientUserInterface {
 	}
 	
 	public void SetGuiText(String str) {
-		temp.setText(str);
+		String[] strSplit = str.split("\n");
+		wordlist = new ArrayList<String>(Arrays.asList(strSplit));
+		Display.setListData(wordlist.toArray(new String[0]));
 	}
 }
