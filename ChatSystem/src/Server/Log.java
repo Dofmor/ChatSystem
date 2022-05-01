@@ -1,14 +1,12 @@
 package Server;
 
-package Server;
-
 import java.io.*;
 
 import java.util.*;
 import Shared.*;
 
 
-public class log  {
+public class Log  {
 	private Message m;
 	
 
@@ -28,7 +26,7 @@ public class log  {
 	 * This is the user data
 	 */
 	
-	public log(Message m, String conversationData, String userData) {
+	public Log(Message m, String conversationData, String userData) {
 		this.m = m;
 		ConversationData = conversationData;
 		UserData = userData;
