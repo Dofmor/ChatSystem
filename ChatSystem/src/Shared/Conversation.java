@@ -18,7 +18,7 @@ public class Conversation {
 		Members = members;
 		Chats = chats;
 	}
-
+	
 	public Conversation(String data) {
 		Chats = new ArrayList<String[]>();
 		String temp, username, time, message;
@@ -89,7 +89,7 @@ public class Conversation {
 				str = str + " ";
 			}
 		}
-		str = str + "\n";
+		//str = str + "\n";
 		if (Chats.size() != 0) {
 			for (int i = 0; i < Chats.size(); i++) {
 				str = str + Chats.get(i)[0] + " " + Chats.get(i)[1] + " " + Chats.get(i)[2] + "\n";
