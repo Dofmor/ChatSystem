@@ -31,12 +31,12 @@ public class Conversation {
 			switch (i) {
 
 			case 0:
-				ID = DataList.get(i);
-				System.out.println(ID);
-				break;
-			case 1:
 				Name = DataList.get(i);
 				System.out.println(Name);
+				break;
+			case 1:
+				ID = DataList.get(i);
+				System.out.println(ID);
 
 				break;
 			case 2:
