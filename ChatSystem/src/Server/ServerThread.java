@@ -229,7 +229,7 @@ public class ServerThread implements Runnable {
 		}
 	}
 
-	// IT methods
+	// IT methods being used to create user
 	private void createUser(Message m) {
 		if (this.person.getUserType().toLowerCase().equals("it") == false
 				|| m.getType().equals("create user") == false) {
@@ -265,7 +265,7 @@ public class ServerThread implements Runnable {
 		send(m);
 		server.listProfiles();
 	}
-
+	// IT methods being used to delete user
 	private void deleteUser(Message m) {
 		if (this.person.getUserType().toLowerCase().equals("it") == false
 				|| m.getType().equals("delete user") == false) {
@@ -301,7 +301,7 @@ public class ServerThread implements Runnable {
 		send(m);
 		server.listProfiles();
 	}
-
+	// IT methods being used to retrieve log to return to IT window
 	private void getLog(Message m) {
 		if (this.person.getUserType().toLowerCase().equals("it") == false
 				|| m.getType().equals("get chat log") == false) {

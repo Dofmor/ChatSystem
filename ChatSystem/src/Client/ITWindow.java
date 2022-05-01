@@ -110,7 +110,7 @@ public class ITWindow implements ClientUserInterface {
 		 infoBox = Box.createVerticalBox();
 		 tempTitle = new JLabel("Info Returned Below");
 		 infoBox.add(tempTitle, BorderLayout.NORTH);
-		 infoBox.add(Display, BorderLayout.CENTER);
+		 infoBox.add(new JScrollPane(Display), BorderLayout.CENTER);
 		 panel2.add(infoBox);
 		 panel2.setBackground(Color.LIGHT_GRAY);
 		 
@@ -190,5 +190,6 @@ public class ITWindow implements ClientUserInterface {
 		String[] strSplit = str.split("\n");
 		wordlist = new ArrayList<String>(Arrays.asList(strSplit));
 		Display.setListData(wordlist.toArray(new String[0]));
+		panel2.validate();
 	}
 }
