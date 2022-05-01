@@ -309,7 +309,7 @@ public class ServerThread implements Runnable {
 				// delete user when found
 				server.getProfiles().remove(user);
 				System.out.println("Deleted user");
-				m.setType("IT command return Info");
+				m.setType("IT command return info");
 				m.setData("deleted user");
 				send(m);
 				// save the current state of profiles to a file
@@ -323,7 +323,7 @@ public class ServerThread implements Runnable {
 		}
 
 		System.out.println("Could not find user to delete");
-		m.setType("IT command return Info");
+		m.setType("IT command return info");
 		m.setData("Could not find user to delete");
 		send(m);
 		server.listProfiles();
@@ -340,7 +340,7 @@ public class ServerThread implements Runnable {
 		for (Conversation c : server.getConversations()) {
 			log += c.toString();
 		}
-		m.setType("IT command return Info");
+		m.setType("IT command return info");
 		m.setData(log);
 		send(m);
 		
