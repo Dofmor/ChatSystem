@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -262,7 +263,10 @@ public class Server {
 		try {
 
 			// Setting the server to run on socket 7777
-			server = new ServerSocket(port);
+			
+			InetAddress serverIP = InetAddress.getByName("10.0.0.210");
+			server = new ServerSocket(port,0, serverIP);
+			//server = new ServerSocket(port);
 			// server.setReuseAddress(true);
 
 			//
@@ -272,7 +276,7 @@ public class Server {
 				System.out.println("Accepted Client " + client);
 				ServerThread newThread = new ServerThread(client, this);
 				serverThreads.add(newThread);
-				newThread.run();
+				new Thread(newThread).start();
 
 			}
 		} catch (IOException e) {

@@ -60,7 +60,7 @@ public class Client {
 		int port = 7777;
 		InetAddress serverIP;
 		try {
-			serverIP = InetAddress.getByName("127.0.0.1");
+			serverIP = InetAddress.getByName("10.0.0.210");
 			socket = new Socket(serverIP, port);
 			outputStream = socket.getOutputStream();
 			objectOutputStream = new ObjectOutputStream(outputStream);
@@ -117,7 +117,7 @@ public class Client {
 	        
 	        
 	        
-		
+	
 		} catch (UnknownHostException e) {
 			System.out.println("Could not get ip address");
 			return;
