@@ -93,7 +93,7 @@ public class Log  {
 
 	public void sendLogs() throws FileNotFoundException {
 		m= new Message("", "", "", "", "", "");
-		Server s=new Server(0);
+		Server s=new Server(0, "0");
 		LogMessage();
 		m.getToServer();
 		s.saveConversations();
