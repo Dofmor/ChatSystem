@@ -60,10 +60,11 @@ public class Server {
 	}
 	
 	public void listProfiles() {
-		System.out.println("Current profiles are: " );
+		System.out.println("\n{\nCurrent profiles are: " );
 		for(Person user: profiles) {
 			System.out.print(user.toString());
 		}
+		System.out.println("}\n");
 	}
 
 	/**
@@ -252,9 +253,6 @@ public class Server {
 			System.out.println("File not found");
 		}
 		
-		for(int i = 0; i < conversations.size(); i++) {
-			System.out.print(conversations.get(i).toString());
-		}
 
 		// FAKE USERS FOR TESTING
 //		profiles.add(new Person("user1", "pass1", "IT"));

@@ -48,7 +48,7 @@ public class ServerThread implements Runnable {
 
 		System.out.println("Connected: " + socket);
 
-		server.listProfiles();
+		//server.listProfiles();
 
 		try {
 
@@ -56,17 +56,17 @@ public class ServerThread implements Runnable {
 			// Continue look if failed login
 			while (this.person == null || this.person.isLoggedIn() == false) {
 				Message NewMessage = (Message) objectInputStream.readObject();
+				printFromClient(NewMessage);
 				login(NewMessage);
 			}
 
 			// Wait for other client messages after a good login
 			while (SocketOpen) {
 				Message NewMessage = (Message) objectInputStream.readObject();
+				printFromClient(NewMessage);
 				// make the dataType in the new message all lower case
 				NewMessage.setType(NewMessage.getType().toLowerCase());
 
-				// sendToOther(NewMessage);
-				PrintMessage(NewMessage);
 
 				switch (NewMessage.getType()) {
 				case "logout message":
@@ -139,63 +139,73 @@ public class ServerThread implements Runnable {
 	}
 
 	private static void PrintMessage(Message msg) {
-		System.out.println("-----------------------------------------------------------");
 		System.out.println("Type: " + msg.getType());
 		System.out.println("Status: " + msg.getStatus());
 		System.out.println("Data: " + msg.getData());
+	}
+	
+	private void printFromClient(Message msg) {
+		System.out.println("-----------------------------------------------------------");
+		System.out.println("Message received from client");
+		PrintMessage(msg);
+		System.out.println("-----------------------------------------------------------");
+		
+	}
+	
+	private void printToClient(Message msg) {
+		System.out.println("-----------------------------------------------------------");
+		if(this.person == null) {
+			System.out.println("Message sent client (" + "user not logged in)");
+		} else {
+			System.out.println("Message sent client " + this.person.getUsername());
+		}
+		PrintMessage(msg);
+		System.out.println("-----------------------------------------------------------");
 	}
 
 	private void login(Message m) {
 		// validate that login() is being used correctly
 		if (m.getType().equals("login message") == false)
 			return;
-		String[] parts = m.getData().split("\n");
-		if (parts.length < 2)
-			return;
-		String username = parts[0];
-		String password = parts[1];
-		if (person == null || person.isLoggedIn() != false) {
-			for (Person user : server.getProfiles()) {
-				// check to see if login information matches any user currently registered.
-				if (user.login(username, password) == true) {
-					// assign this thread to be associated with a user if login information is
-					// correct
-					this.person = user;
-					try {
+		List<String> data = Arrays.asList(m.getData().split("\n"));
+		try {
+			String username = data.get(0);
+			String password = data.get(1);
+			if (person == null || person.isLoggedIn() != false) {
+				for (Person user : server.getProfiles()) {
+					// check to see if login information matches any user currently registered.
+					if (user.login(username, password) == true) {
+						// assign this thread to be associated with a user if login information is
+						// correct
+						this.person = user;
 						// send successful login information back to server
 						m.setStatus("success");
 						m.setData(user.getUserType());
-						objectOutputStream.writeObject(m);
-						System.out.println(
-								"{ \nUser : " + username + "\nPassword : " + password + "\nlogged in successfully\n}");
+						send(m);
 						server.getActiveUsers().put(username, this);
 
 						// send all the users conversations back to client
 						refresh();
-
 						return;
-					} catch (IOException e) {
-
+						
 					}
 				}
 			}
-
 			// user login information not found
-			try {
-				m.setStatus("failed");
-				objectOutputStream.writeObject(m);
-				System.out.println("{ \nUser : " + username + "\nPassword : " + password + "\nfailed to login\n}");
-			} catch (IOException e) {
-
-			}
+			m.setStatus("failed");
+			send(m);
+			
+		} catch (ArrayIndexOutOfBoundsException e) {
+			e.printStackTrace();
 		}
+
+		
 	}
 
 	private void sendToOther(Message m) {
 		// this function takes the message in the current thread, and finds the correct
 		// user or thread to send it to .
 
-		PrintMessage(m);
 		// parse message data by newline
 		List<String> data = Arrays.asList(m.getData().split("\n"));
 		// get users from message
@@ -218,15 +228,13 @@ public class ServerThread implements Runnable {
 	}
 
 	private void send(Message m) {
-		if (this.person == null || this.person.isLoggedIn() == false)
-			return;
 		try {
 			objectOutputStream.writeObject(m);
-			System.out.println("Message sent to " + this.person.getUsername());
-			PrintMessage(m);
 		} catch (IOException e) {
-
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		printToClient(m);
 	}
 
 	// IT methods being used to create user
@@ -268,7 +276,7 @@ public class ServerThread implements Runnable {
 			m.setType("IT command return Info");
 			m.setData("new user created");
 			send(m);
-			server.listProfiles();
+			//server.listProfiles();
 
 		} catch (ArrayIndexOutOfBoundsException e) {
 			e.printStackTrace();
@@ -312,7 +320,7 @@ public class ServerThread implements Runnable {
 			m.setType("IT command return info");
 			m.setData("Could not find user to delete");
 			send(m);
-			server.listProfiles();
+			//server.listProfiles();
 
 		} catch (ArrayIndexOutOfBoundsException e) {
 			e.printStackTrace();
@@ -347,7 +355,7 @@ public class ServerThread implements Runnable {
 			List<String> users = new ArrayList<>();
 			users.add(this.person.getUsername());
 			users.add(username);
-			ArrayList<String[]> chat = new ArrayList<String[]>();
+			//ArrayList<String[]> chat = new ArrayList<String[]>();
 			// chat.add(new String[] { "", "", "" });
 			String id = "" + (server.getConversations().size() + 1);
 			Conversation newConvo = new Conversation(chatName, id, users);
@@ -449,5 +457,6 @@ public class ServerThread implements Runnable {
 		send(m);
 		SocketOpen = false;
 	}
+	
 
 }
