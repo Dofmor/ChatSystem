@@ -1,18 +1,20 @@
 General
 1
-admin Daniel Harry Nick Jacob Brian
-Daniel 11:47pm hello, world!
-Daniel 11:48pm testing new lines
-Daniel 11:49pm test again
+admin daniel harry nick jacob brian
+daniel 11:47PM hello, world!
+daniel 11:48PM testing new lines
+daniel 11:49PM test again
+daniel 05:39PM hi
 END
 Off-topic
 2
-admin Daniel
-admin 11:50pm hello, world!
+admin daniel
+admin 11:50PM hello, world!
+daniel 05:38PM testing a new message
 END
 Random
 3
-john Daniel
-john 04-23-22 asjhsajdhas
-Daniel 04-23-22 hello
+john daniel
+john 11:51PM asjhsajdhas
+daniel 11:52PM hello
 END

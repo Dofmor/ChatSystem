@@ -5,7 +5,9 @@ package Shared;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 
 public class Message implements Serializable{
@@ -114,10 +116,8 @@ public class Message implements Serializable{
 	 */
 	public String getTime() {
 		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-		String formattedTime = dateTime.format(formatter);
-		
-		return formattedTime;		
+		String formattedDate = new SimpleDateFormat("hh:mma").format(new Date());
+		return formattedDate;	
 	}
 	
 	

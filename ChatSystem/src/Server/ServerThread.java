@@ -352,7 +352,7 @@ public class ServerThread implements Runnable {
 			List<String> data = Arrays.asList(m.getData().split("\n"));
 			String chatID = data.get(0);
 			String chatMessage = data.get(1);
-			String[] chat = new String[] { this.person.getUsername(), m.getDate(), chatMessage };
+			String[] chat = new String[] { this.person.getUsername(), m.getTime(), chatMessage };
 			// find the conversation to load the text message in
 			for (Conversation c : server.getConversations()) {
 				if (c.ID.equals(chatID)) {
