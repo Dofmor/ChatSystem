@@ -250,8 +250,14 @@ public class ServerThread implements Runnable {
 					return;
 				}
 			}
-
-			server.getProfiles().add(new Person(username, data.get(1), data.get(2)));
+			
+			//if the user does not exist, add them with correct user type
+			String validIT = "IT";
+			String validPerson = "Person";
+			String userType  = data.get(2).toLowerCase();
+			userType = userType.equals("it") ? validIT : validPerson;
+			server.getProfiles().add(new Person(username, data.get(1), userType));
+			
 			// save the current state of profiles to a file
 			try {
 				server.saveProfiles();
@@ -281,8 +287,6 @@ public class ServerThread implements Runnable {
 		}
 		List<String> data = Arrays.asList(m.getData().split("\n"));
 		try {
-
-		} catch (ArrayIndexOutOfBoundsException e) {
 			String username = data.get(0);
 			System.out.println("username is " + username);
 			// find the username in current profiles list
@@ -309,6 +313,9 @@ public class ServerThread implements Runnable {
 			m.setData("Could not find user to delete");
 			send(m);
 			server.listProfiles();
+
+		} catch (ArrayIndexOutOfBoundsException e) {
+			e.printStackTrace();
 		}
 
 	}
