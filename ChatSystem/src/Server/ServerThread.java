@@ -62,7 +62,7 @@ public class ServerThread implements Runnable {
 			// Wait for other client messages after a good login
 			while (SocketOpen) {
 				Message NewMessage = (Message) objectInputStream.readObject();
-				//make the dataType in the new message all lower case
+				// make the dataType in the new message all lower case
 				NewMessage.setType(NewMessage.getType().toLowerCase());
 
 				// sendToOther(NewMessage);
@@ -236,35 +236,43 @@ public class ServerThread implements Runnable {
 			return;
 		}
 		List<String> data = Arrays.asList(m.getData().split("\n"));
-		if (data.size() < 3) {
-			System.out.println("Not enough data to create user");
-			return;
-		}
-		// data list contains username, password, userType
-		// verify the user doesn't exist
-		for (int i = 0; i < server.getProfiles().size(); i++) {
-			if (server.getProfiles().get(i).getUsername().equals(data.get(0))) {
-				System.out.println("User already exists ");
-				m.setType("IT command return Info");
-				m.setData("user already exists");
-				send(m);
-				return;
+		try {
+			String username = data.get(0);
+			username = username.toLowerCase();
+			// data list contains username, password, userType
+			// verify the user doesn't exist
+			for (int i = 0; i < server.getProfiles().size(); i++) {
+				if (server.getProfiles().get(i).getUsername().equals(username)) {
+					System.out.println("User already exists ");
+					m.setType("IT command return Info");
+					m.setData("user already exists");
+					send(m);
+					return;
+				}
 			}
+
+			server.getProfiles().add(new Person(username, data.get(1), data.get(2)));
+			// save the current state of profiles to a file
+			try {
+				server.saveProfiles();
+			} catch (FileNotFoundException e) {
+				System.out.println(e);
+			}
+			System.out.println("Created new user ");
+			m.setType("IT command return Info");
+			m.setData("new user created");
+			send(m);
+			server.listProfiles();
+
+		} catch (ArrayIndexOutOfBoundsException e) {
+			e.printStackTrace();
+			m.setType("IT command return Info");
+			m.setData("Not enough data to create user");
+			send(m);
 		}
 
-		server.getProfiles().add(new Person(data.get(0), data.get(1), data.get(2)));
-		// save the current state of profiles to a file
-		try {
-			server.saveProfiles();
-		} catch (FileNotFoundException e) {
-			System.out.println(e);
-		}
-		System.out.println("Created new user ");
-		m.setType("IT command return Info");
-		m.setData("new user created");
-		send(m);
-		server.listProfiles();
 	}
+
 	// IT methods being used to delete user
 	private void deleteUser(Message m) {
 		if (this.person.getUserType().toLowerCase().equals("it") == false
@@ -301,24 +309,23 @@ public class ServerThread implements Runnable {
 		send(m);
 		server.listProfiles();
 	}
+
 	// IT methods being used to retrieve log to return to IT window
 	private void getLog(Message m) {
 		if (this.person.getUserType().toLowerCase().equals("it") == false
 				|| m.getType().equals("get chat log") == false) {
 			return;
 		}
-		
+
 		String log = "";
-		
+
 		for (Conversation c : server.getConversations()) {
 			log += c.toString();
 		}
 		m.setType("IT command return info");
 		m.setData(log);
 		send(m);
-		
-		
-		
+
 	}
 
 	private void newChat(Message m) {
@@ -331,7 +338,7 @@ public class ServerThread implements Runnable {
 			users.add(this.person.getUsername());
 			users.add(username);
 			ArrayList<String[]> chat = new ArrayList<String[]>();
-			//chat.add(new String[] { "", "", "" });
+			// chat.add(new String[] { "", "", "" });
 			String id = "" + (server.getConversations().size() + 1);
 			Conversation newConvo = new Conversation(chatName, id, users);
 
