@@ -5,12 +5,28 @@ daniel 11:47PM hello, world!
 daniel 11:48PM testing new lines
 daniel 11:49PM test again
 daniel 05:39PM hi
+daniel 08:28PM hello admin
+daniel 08:29PM testing live updates
+admin 08:33PM testing live updates again
+admin 08:33PM hello
+admin 08:33PM hello
+daniel 08:33PM hellp
+admin 08:34PM sending from my mac
+admin 08:36PM testing one more time because nick said so
 END
 Off-topic
 2
 admin daniel
 admin 11:50PM hello, world!
 daniel 05:38PM testing a new message
+daniel 08:18PM testing multithreading maybe?
+admin 08:37PM hello
+admin 08:37PM is this updating
+admin 08:38PM is this 
+daniel 08:55PM Hello admin
+admin 08:55PM hello
+daniel 08:55PM hello
+daniel 08:56PM hello
 END
 Random
 3

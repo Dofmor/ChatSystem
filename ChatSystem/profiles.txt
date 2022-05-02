@@ -3,7 +3,6 @@ john pass IT
 testuser pass IT
 daniel guess Person
 nick guess Person
-jacob guess Person
 harry guess Person
 brian guess Person
-
+jacob password Person

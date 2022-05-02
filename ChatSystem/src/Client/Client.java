@@ -53,14 +53,14 @@ public class Client {
 		return false;
 	}
 	
-	
-	public Client() throws ClassNotFoundException, IOException {
+
+	public Client(String ip) throws ClassNotFoundException, IOException {
 		
 		
 		int port = 7777;
 		InetAddress serverIP;
 		try {
-			serverIP = InetAddress.getByName("10.0.0.210");
+			serverIP = InetAddress.getByName(ip);
 			socket = new Socket(serverIP, port);
 			outputStream = socket.getOutputStream();
 			objectOutputStream = new ObjectOutputStream(outputStream);

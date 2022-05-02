@@ -16,6 +16,7 @@ import java.util.Scanner;
 
 public class Server {
 
+	private String ipAddress;
 	private int port;
 	private ArrayList<ServerThread> serverThreads = new ArrayList<>();
 	private ArrayList<Person> profiles = new ArrayList<>();
@@ -24,8 +25,9 @@ public class Server {
 	private String profilesFile = "profiles.txt";
 	private String conversationsFile = "conversations.txt";
 
-	public Server(int port) {
+	public Server(int port, String ipAddress) {
 		this.port = port;
+		this.ipAddress = ipAddress;
 	}
 	
 	public ArrayList<Person> getProfiles() {
@@ -264,7 +266,7 @@ public class Server {
 
 			// Setting the server to run on socket 7777
 			
-			InetAddress serverIP = InetAddress.getByName("10.0.0.210");
+			InetAddress serverIP = InetAddress.getByName(ipAddress);
 			server = new ServerSocket(port,0, serverIP);
 			//server = new ServerSocket(port);
 			// server.setReuseAddress(true);
