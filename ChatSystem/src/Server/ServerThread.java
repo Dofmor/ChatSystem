@@ -280,34 +280,37 @@ public class ServerThread implements Runnable {
 			return;
 		}
 		List<String> data = Arrays.asList(m.getData().split("\n"));
-		if (data.size() <= 0)
-			return;
-		String username = data.get(0);
-		System.out.println("username is " + username);
-		// find the username in current profiles list
-		for (Person user : server.getProfiles()) {
-			if (user.getUsername().equals(username)) {
-				// delete user when found
-				server.getProfiles().remove(user);
-				System.out.println("Deleted user");
-				m.setType("IT command return info");
-				m.setData("deleted user");
-				send(m);
-				// save the current state of profiles to a file
-				try {
-					server.saveProfiles();
-				} catch (FileNotFoundException e) {
-					System.out.println(e);
+		try {
+
+		} catch (ArrayIndexOutOfBoundsException e) {
+			String username = data.get(0);
+			System.out.println("username is " + username);
+			// find the username in current profiles list
+			for (Person user : server.getProfiles()) {
+				if (user.getUsername().equals(username)) {
+					// delete user when found
+					server.getProfiles().remove(user);
+					System.out.println("Deleted user");
+					m.setType("IT command return info");
+					m.setData("deleted user");
+					send(m);
+					// save the current state of profiles to a file
+					try {
+						server.saveProfiles();
+					} catch (FileNotFoundException fnf) {
+						System.out.println(fnf);
+					}
+					return;
 				}
-				return;
 			}
+
+			System.out.println("Could not find user to delete");
+			m.setType("IT command return info");
+			m.setData("Could not find user to delete");
+			send(m);
+			server.listProfiles();
 		}
 
-		System.out.println("Could not find user to delete");
-		m.setType("IT command return info");
-		m.setData("Could not find user to delete");
-		send(m);
-		server.listProfiles();
 	}
 
 	// IT methods being used to retrieve log to return to IT window
