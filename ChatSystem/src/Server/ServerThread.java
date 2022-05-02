@@ -401,6 +401,18 @@ public class ServerThread implements Runnable {
 			List<String> data = Arrays.asList(m.getData().split("\n"));
 			String chatID = data.get(0);
 			String username = data.get(1);
+			
+			//check to see if the user exists l
+			int size = server.getProfiles().size();
+			for (int i = 0; i < size; i++) {
+				if (server.getProfiles().get(i).getUsername().equals(username)) {
+					break;
+				}
+				if(i == size - 1) {
+					System.out.println("Could not add " + username + "to chat because they are not registered.");
+					return;
+				}
+			}
 
 			for (Conversation c : server.getConversations()) {
 				// find the correct conversation
