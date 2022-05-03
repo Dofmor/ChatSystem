@@ -17,7 +17,7 @@ class ClientDriver {
 		//Enter in own IP address when starting client to connect mutlitple clients
 		Client client = new Client(ip);
 		client.run();
-		
+		input.close();
 	}
 }
 
