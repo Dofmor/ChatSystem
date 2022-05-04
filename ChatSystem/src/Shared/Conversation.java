@@ -28,6 +28,7 @@ public class Conversation {
 	}
 	
 	public Conversation(String data) {
+		Members = new ArrayList<String>();
 		Chats = new ArrayList<String[]>();
 		String temp, username, time, message;
 		String[] Array;
@@ -40,15 +41,18 @@ public class Conversation {
 
 			case 0:
 				Name = DataList.get(i);
-				System.out.println(Name);
+//				System.out.println(Name);
 				break;
 			case 1:
 				ID = DataList.get(i);
-				System.out.println(ID);
+//				System.out.println(ID);
 
 				break;
 			case 2:
-				Members = Arrays.asList(DataList.get(i).split(" "));
+				List<String> MembersTemp = Arrays.asList(DataList.get(i).split(" "));
+				for (int i1 = 0; i1 < MembersTemp.size(); i1++) {
+					addMember(MembersTemp.get(i1));
+				}
 				break;
 			default:
 //			    	List<String> tempList = Arrays.asList(DataList.get(i).split(","));
@@ -60,19 +64,16 @@ public class Conversation {
 
 				Array = new String[3];
 				temp = DataList.get(i);
-				System.out.println("**********");
 				Scanner sc = new Scanner(temp);
 				username = sc.next();
-				System.out.println(username);
 				time = sc.next();
-				System.out.println(time);
 
 				message = sc.nextLine();
-				System.out.println(message);
+//				System.out.println(message);
 
 				Array[0] = username;
 				Array[1] = time;
-				Array[2] = message;
+				Array[2] = message.substring(1);
 				Chats.add(Array);
 
 			}
@@ -110,7 +111,7 @@ public class Conversation {
 	public String chatsToText() {
 		String str = "";
 		for (int i = 0; i < Chats.size(); i++) {
-			str = str + Chats.get(i)[0] + ": ";
+			str = str + Chats.get(i)[0] + ":  ";
 			str = str + Chats.get(i)[2] + "\n";
 		}
 		return str;
