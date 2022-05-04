@@ -35,10 +35,13 @@ public class ITtest {
 		Server server = new Server(7777, "localhost");
 		//Reads all conversations into the storage list
 		server.readConversations();
+		//Creates a variabel to hold the strings of log
 		String log = "";
+		//Adds all the conversation info to the string variable
 		for(int i = 0; i < server.getConversations().size(); i++) {
 			log += server.getConversations().get(i).toString();
 		}
+		//Checks if the string is empty or not
 		assertNotNull(log);
 	}
 	
