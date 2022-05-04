@@ -1,4 +1,4 @@
-package Testing;
+import  Testing.*;
 import org.junit.runner.JUnitCore;
 
 import org.junit.runner.Result;
