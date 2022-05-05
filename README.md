@@ -14,7 +14,7 @@
 
 [**Team Meetings**](Documents/TeamMeetings.pdf)
 
-[**ProjectSchedule**](Documents/ProjectSchedule.xlsx)
+[**ProjectSchedule**](Documents/ProjectSchedule.pdf)
 
 
 <!-- 
